@@ -12,16 +12,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace DarkSoulsCloudSave.Core
+namespace DarkSoulsCloudSave.Core.CloudStorages
 {
+    /// <summary>
+    /// Implementation of cloud storage for the Dropbox platform.
+    /// </summary>
     public class DropboxCloudStorage : ICloudStorage
     {
         private DropboxClient dropboxClient;
         private IReadOnlyDictionary<string, string> config;
 
         private const string AppKey = "cwoecqgt2xtma0l";
-        private const string AppSecret = "2a3si3j0kvgrush";
+        private const string AppSecret = "2a3si3j0kvgrush"; // <- not that secret in that case
 
+        /// <summary>
+        /// Initializes the Dropbox library, and ignites the authorization process if needed.
+        /// </summary>
+        /// <returns>Returns a task to be awaited until the initialization process is done.</returns>
         public async Task Initialize()
         {
             string accessToken;
@@ -67,6 +74,10 @@ namespace DarkSoulsCloudSave.Core
             dropboxClient = new DropboxClient(accessToken);
         }
 
+        /// <summary>
+        /// Lists the files available in the 'Apps/DarkSoulsCloudStrorage' remote folder on the Dropbox.
+        /// </summary>
+        /// <returns>Returns an array of remote filenames.</returns>
         public async Task<string[]> ListFiles()
         {
             if (dropboxClient == null)
@@ -81,6 +92,11 @@ namespace DarkSoulsCloudSave.Core
                 .ToArray();
         }
 
+        /// <summary>
+        /// Downloads a remote file from Dropbox, as a readable stream.
+        /// </summary>
+        /// <param name="fullFilename">The full filename of the remote file to download from Dropbox.</param>
+        /// <returns>Returns a readable stream representing the remote file to download.</returns>
         public async Task<Stream> Download(string fullFilename)
         {
             if (string.IsNullOrWhiteSpace(fullFilename))
@@ -93,6 +109,12 @@ namespace DarkSoulsCloudSave.Core
                 return new MemoryStream(await response.GetContentAsByteArrayAsync());
         }
 
+        /// <summary>
+        /// Uploads a local file to Dropbox.
+        /// </summary>
+        /// <param name="fullFilename">The full filename to be given to the remote file.</param>
+        /// <param name="stream">A readable stream containing the local file content to upload to Dropbox.</param>
+        /// <returns>Returns a task to be awaited until upload is done.</returns>
         public async Task Upload(string fullFilename, Stream stream)
         {
             if (string.IsNullOrWhiteSpace(fullFilename))
@@ -107,6 +129,9 @@ namespace DarkSoulsCloudSave.Core
             await dropboxClient.Files.UploadAsync(fullFilename, WriteMode.Overwrite.Instance, body: stream);
         }
 
+        /// <summary>
+        /// Disposes the Dropbox library.
+        /// </summary>
         public void Dispose()
         {
             if (dropboxClient != null)

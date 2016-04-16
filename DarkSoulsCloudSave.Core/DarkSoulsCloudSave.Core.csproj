@@ -20,6 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\DarkSoulsCloudSave.Core.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +30,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>bin\Release\DarkSoulsCloudSave.Core.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dropbox.Api, Version=0.1.5948.22265, Culture=neutral, PublicKeyToken=310f0e82fbb45d01, processorArchitecture=MSIL">
@@ -54,7 +58,7 @@
   <ItemGroup>
     <Compile Include="SaveDataUtility.cs" />
     <Compile Include="ICloudStorage.cs" />
-    <Compile Include="DropboxCloudStorage.cs" />
+    <Compile Include="CloudStorages\DropboxCloudStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConfigurationUtility.cs" />
     <Compile Include="SecurityUtility.cs" />

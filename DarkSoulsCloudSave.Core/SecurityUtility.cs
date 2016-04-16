@@ -7,10 +7,20 @@ using System.Threading.Tasks;
 
 namespace DarkSoulsCloudSave.Core
 {
+    /// <summary>
+    /// Provides helper methods related to security.
+    /// </summary>
     public static class SecurityUtility
     {
         private static readonly byte[] ProtectionEntropy = { 0x5b, 0x50, 0x9f, 0x82, 0xf1, 0x4b, 0x4c, 0x4d, 0x92, 0xee, 0x0, 0xac, 0xb1, 0xd2, 0xee, 0x6f };
 
+        /// <summary>
+        /// Protects (encrypts) a string.
+        /// </summary>
+        /// <param name="unprotectedValue">The unprotected string value to protect.</param>
+        /// <param name="scope">The protection scope.</param>
+        /// <returns>Returns a base64 encoded protected string, or null on error.</returns>
+        /// <seealso cref="UnprotectString(string, DataProtectionScope)"/>
         public static string ProtectString(string unprotectedValue, DataProtectionScope scope)
         {
             try
@@ -25,6 +35,12 @@ namespace DarkSoulsCloudSave.Core
             }
         }
 
+        /// <summary>
+        /// Unprotects (decrypts) a string.
+        /// </summary>
+        /// <param name="protectedValue">The base64 encoded protected string to unprotect.</param>
+        /// <param name="scope">The protection scope.</param>
+        /// <returns>Returns unprotected string value, or null on error.</returns>
         public static string UnprotectString(string protectedValue, DataProtectionScope scope)
         {
             try

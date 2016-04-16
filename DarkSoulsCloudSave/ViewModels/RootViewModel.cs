@@ -1,5 +1,4 @@
-﻿using DarkSoulsCloudSave.DataModels.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,6 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using DarkSoulsCloudSave.DataModels.Configuration.V1;
 using DarkSoulsCloudSave.Core;
+using DarkSoulsCloudSave.Core.CloudStorages;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Threading;
