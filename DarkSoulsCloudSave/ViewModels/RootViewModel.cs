@@ -98,6 +98,9 @@ namespace DarkSoulsCloudSave.ViewModels
 
             configuration = LoadConfiguration();
 
+            IsAutoStore = configuration.AutoStore;
+            IsAutoRestore = configuration.AutoRestore;
+
             InitializeCloudStorage();
 
             StartGameProcessMonitoring();
