@@ -1,0 +1,8 @@
+.vs/
+DarkSoulsCloudSave.Core/bin/
+DarkSoulsCloudSave.Core/obj/
+DarkSoulsCloudSave/bin/Build/
+DarkSoulsCloudSave/bin/Debug/
+DarkSoulsCloudSave/bin/Release/
+DarkSoulsCloudSave/obj/
+packages/
