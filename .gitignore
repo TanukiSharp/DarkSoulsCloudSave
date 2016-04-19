@@ -6,3 +6,7 @@ DarkSoulsCloudSave/bin/Debug/
 DarkSoulsCloudSave/bin/Release/
 DarkSoulsCloudSave/obj/
 packages/
+DarkSoulsCloudSave.DropboxExtension/bin/
+DarkSoulsCloudSave.DropboxExtension/obj/
+DarkSoulsCloudSave.GoogleDriveExtension/bin/
+DarkSoulsCloudSave.GoogleDriveExtension/obj/

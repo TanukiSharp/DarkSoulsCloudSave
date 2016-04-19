@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("DarkSoulsCloudSave")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Tanuki")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("DarkSoulsCloudSave")]
-[assembly: AssemblyCopyright("Copyright © Tanuki 2016")]
+[assembly: AssemblyCopyright("Copyright © TanukiSharp 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,4 +51,4 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.2")]
+[assembly: AssemblyVersion("1.0.3")]

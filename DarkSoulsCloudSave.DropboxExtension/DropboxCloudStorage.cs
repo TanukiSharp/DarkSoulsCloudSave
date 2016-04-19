@@ -1,18 +1,16 @@
-﻿using Dropbox.Api;
+﻿using DarkSoulsCloudSave.Core;
+using Dropbox.Api;
 using Dropbox.Api.Files;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace DarkSoulsCloudSave.Core.CloudStorages
+namespace DarkSoulsCloudSave.DropboxExtension
 {
     /// <summary>
     /// Implementation of cloud storage for the Dropbox platform.

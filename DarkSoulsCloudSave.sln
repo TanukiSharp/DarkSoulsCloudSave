@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkSoulsCloudSave", "DarkS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkSoulsCloudSave.Core", "DarkSoulsCloudSave.Core\DarkSoulsCloudSave.Core.csproj", "{1B6BB7E7-1DE9-46D5-A288-E40EFD56DC61}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkSoulsCloudSave.GoogleDriveExtension", "DarkSoulsCloudSave.GoogleDriveExtension\DarkSoulsCloudSave.GoogleDriveExtension.csproj", "{8E5832C8-F77D-48F5-8C1F-1545C4ADB3E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkSoulsCloudSave.DropboxExtension", "DarkSoulsCloudSave.DropboxExtension\DarkSoulsCloudSave.DropboxExtension.csproj", "{D22444BE-B794-40F4-80D5-F716F7AFCC67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{1B6BB7E7-1DE9-46D5-A288-E40EFD56DC61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B6BB7E7-1DE9-46D5-A288-E40EFD56DC61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B6BB7E7-1DE9-46D5-A288-E40EFD56DC61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E5832C8-F77D-48F5-8C1F-1545C4ADB3E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E5832C8-F77D-48F5-8C1F-1545C4ADB3E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E5832C8-F77D-48F5-8C1F-1545C4ADB3E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E5832C8-F77D-48F5-8C1F-1545C4ADB3E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D22444BE-B794-40F4-80D5-F716F7AFCC67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D22444BE-B794-40F4-80D5-F716F7AFCC67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D22444BE-B794-40F4-80D5-F716F7AFCC67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D22444BE-B794-40F4-80D5-F716F7AFCC67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

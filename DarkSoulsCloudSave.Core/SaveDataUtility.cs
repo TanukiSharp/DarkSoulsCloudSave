@@ -95,6 +95,9 @@ namespace DarkSoulsCloudSave.Core
         {
             var now = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-fff");
 
+            if (Directory.Exists(SaveDataPath) == false)
+                return;
+
             foreach (string directory in Directory.GetDirectories(SaveDataPath, "*", SearchOption.TopDirectoryOnly))
             {
                 var filename = string.Format("{0}_{1}.zip", Path.GetFileName(directory), now);

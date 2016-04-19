@@ -183,6 +183,15 @@ The `DarksSoulsCloudSave.Core` library contains most of the application logic, s
 This software is provided as WTFPL.
 http://www.wtfpl.net/
 
+# Experiments
+
+I'm now experimenting a Google Drive based cloud storage implementation, but there are a few issues for the moment.
+
+Despite technical difficulties, there are some limitations in the product that makes me feel unconfortable for the moment, as stated on the following page, section `What is the Application Data folder?`.
+https://developers.google.com/drive/v3/web/appdata
+
+This document is intended to developers, so as an end-user, when you read it, replace `your application` by `DarkSoulsCloudSave` and `the user` by `you`.
+
 # Request from the authors
 
 Please avoid using this software to cheat. (save-scumming)

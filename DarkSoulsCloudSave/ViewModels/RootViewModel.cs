@@ -9,7 +9,6 @@ using System.Windows;
 using System.Windows.Input;
 using DarkSoulsCloudSave.DataModels.Configuration.V1;
 using DarkSoulsCloudSave.Core;
-using DarkSoulsCloudSave.Core.CloudStorages;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Threading;
@@ -117,7 +116,8 @@ namespace DarkSoulsCloudSave.ViewModels
 
             try
             {
-                cloudStorage = new DropboxCloudStorage();
+                cloudStorage = new DropboxExtension.DropboxCloudStorage();
+                //cloudStorage = new GoogleDriveExtension.GoogleDriveCloudStorage();
 
                 await cloudStorage.Initialize();
 

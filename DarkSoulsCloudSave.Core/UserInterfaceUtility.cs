@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,6 @@ using System.Windows.Media;
 
 namespace DarkSoulsCloudSave.Core
 {
-    /*
     public static class UserInterfaceUtility
     {
         public static string InputBox(string title, string prompt, string defaultValue)
@@ -63,5 +63,5 @@ namespace DarkSoulsCloudSave.Core
             return null;
         }
     }
-    */
 }
+*/
