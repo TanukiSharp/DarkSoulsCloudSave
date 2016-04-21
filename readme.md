@@ -1,14 +1,14 @@
 # Overview
 
-DarkSoulsCloudSave is a software that helps you store and restore your Dark Souls 3 save data to the cloud.
+DarkSoulsCloudSave is a software that helps you store and restore your Dark Souls 3 save data to and from the cloud.
 
 It also allows you to easily restore save data from the cloud, and so by definition can be used as a "Cloud Save" feature that is missing to the Steam version of the game.
 
-For now it uses Dropbox, so you will need a Dropbox account to use it. (creating a Dropbox account is free)
+For now it uses Dropbox as cloud storage, so you will need a Dropbox account to use it. (creating a Dropbox account is free)
 
-This software has been written with extensibility in mind, so in the future it **could** be possible to switch to another cloud storage service.
+This software has been written with extensibility in mind, so in the future it **could** be possible to switch to another cloud storage service. *(now experimenting Google Drive cloud storage)*
 
-![Dark Souls Cloud Storage](Images/readme/main_window.png "Dark Souls Cloud Storage")
+![DarkSoulsCloudSave Application](Images/readme/main_window.png "DarkSoulsCloudSave Application")
 
 # Disclaimer
 
@@ -64,7 +64,7 @@ And so, as stated in the very first dialog box, copy this code to the clipboard.
 
 Then return to the application, where you should see the following dialog, telling you that once you click the `OK` button, the application will read the clipboard in order to retrieve the code provided by Dropbox.
 
-Please make sure to not copy anything else between the code and clicking the `OK` button, or this would invalidate the clipboard and fill it with data that makes no sense to Dropbox.
+Please make sure to not copy anything else between the moment you copied the code and the moment you click the `OK` button, or this would invalidate the clipboard and fill it with data that makes no sense to Dropbox.
 
 ![Authorization](Images/readme/authorization5.png "Authorization")
 
@@ -87,8 +87,8 @@ It is stored encrypted in the file `storageconfig/DropboxCloudStorage.config`.
 
 ![Storage Configuration](Images/readme/file_storageconfig.png "Storage Configuration")
 
-It can only be decrypted on the machine and by the logged-in user that generated it, so the `access token` will simply be considered corrupted on another machine or on the same machine but logged-in with another user.
-Please **make sure to understand** that it means somebody with a physical access to your machine could decrypt the `access token`.
+It can only be decrypted on the machine and by the logged-in user that generated it, so the `access token` will simply be considered corrupted on another machine or on the same machine but if you are logged-in with another user.
+Please **make sure to understand** that it means somebody with a physical access to your machine while you are logged-in, could decrypt the `access token`.
 
 As stated before, the `access token` could grant somebody write access (and thus delete) to your `Apps/DarkSoulsCloudSave` folder on Dropbox. (only this folder, not the remaining of your Dropbox content)
 
@@ -96,24 +96,24 @@ If you think you have been stolen this `access token`, you'd rather revoke acces
 
 # How the application works
 
-From now on, Dropbox will be abstracted to 'the cloud', as much as possible.
+From now on, Dropbox will be abstracted to 'the cloud', as much as possible, since any other cloud storage service could be used instead.
 
 ## Store
 
-When clicking the `Store` button, the application will automatically retrieve your Dark Souls 3 save data and upload it to the cloud.
+When clicking the `Store` button, the application will automatically retrieve your local Dark Souls 3 save data and upload it to the cloud.
 
 Note: if there is save data of several different Steam accounts, they will all be uploaded to the cloud.
 
-Dropbox keeps all the old versions of a file, so in case of problem, you can always revert to a given revision.
+Dropbox keeps all the old versions of a file, so in case of problem, you can always revert to any revision.
 
 ## Auto-store
 
 The `Auto-store` check box is used to automatically upload save data after running the game. This feature disables the `Store` button so you can't manually click it.
 
-If the `Auto-store` is checked but you run Dark Souls 3 manually from outside the application, the save data will **not** be automatically uploaded to the cloud when you will quit the game.
+If the `Auto-store` is checked but you run Dark Souls 3 manually from outside the application, the save data will **not** be automatically uploaded to the cloud when you quit the game.
 This works only when you click the `Run Game` button from the application.
 
-Note: considering you ran the game by clicking the `Run Game` button and the `Auto-store` is checked, the application will upload save data after the game *stops*, meaning this will also happen if the game crashes.
+Note: considering you ran the game by clicking the `Run Game` button and the `Auto-store` is checked, the application will upload save data after the game *stops*, meaning this will also happen if the game crashes or else.
 
 ## Restore
 
@@ -123,14 +123,14 @@ Please do understand that this is the way things could be messed up.
 
 ### Backup
 
-However, to minimize the risks, a local save data backup feature is integrated in the application.
+A local save data backup feature is integrated in the application.
 
-Save data on local machine are backed up each time you restore from the cloud.
+Save data on local machine are backed up each time you restore from the cloud, to reduce the risk of losing data when local save data is overwritten by the remote save data.
 
 The backups are contained in the `backups` folder, in the form `<filename>_<date>_<time>.zip`, where `<date>` is `<year>-<month>-<day>` and `<time>` is `<hour_24H>-<minutes>-<seconds>-<milliseconds>`
 
 ![Backups](Images/readme/file_backups.png "Backups")
- 
+
 Backups can accumulate quickly, so remember to clean it up from time to time.
 
 It is recommended to always keep at least the three last backups even if everything seems to be alright, just in case.
@@ -141,20 +141,20 @@ Same as the `Auto-store` feature, this makes the application to automatically do
 
 ## Store and restore availability
 
-The `Store` and `Restore` features are available while the game is running.
-You may need this for whatever reason, but be sure to know what you do if you try to store or restore save data while the run is running.
+The `Store` and `Restore` features are available while the game is running. (unless `Auto-store` and/or `Auto-restore` is/are checked)
+You may need this for whatever reason, but be *sure to know what you do* if you try to store and/or restore save data while the game is running.
 
 ## Configuration
 
-The application remembers the `Auto-store` and `Auto-restore` state. This is saved in the `DarkSoulsCloudSave.config` file.
+The application remembers the `Auto-store` and `Auto-restore` states. This is saved in the `DarkSoulsCloudSave.config` file.
 
 ![Configuration](Images/readme/file_config.png "Configuration")
 
-# Builds
+# Download
 
-There is a `Build` directory that contains binaries read to be executed, for the ones not familiar with technical aspects.
+There is a `Builds` directory that contains binaries ready to be executed, for the ones not familiar with technical aspects.
 
-# How to build from the code
+# How to build from source code
 
 This application has been written in C# using WPF. (Windows Presentation Foundation)
 
@@ -164,11 +164,8 @@ Open the `DarkSoulsCloudSave.sln` file with Visual Studio, then build the applic
 
 ![Build from source](Images/readme/build.png "Build from source")
 
-The `DarkSoulsCloudSave.Core` library depends on `Dropbox.Api` library, which itself depends on `Newtonsoft.Json` library.
-This is setup as a `NuGet` package.
-When you will build, dependencies should be resolved automatically by Visual Studio.
-
-![NuGet dependencies](Images/readme/nuget_dependencies.png "NuGet dependencies")
+Cloud storage extension libraries have some dependencies, setup as `NuGet` packages.
+When you will build, dependencies should be automatically resolved by Visual Studio.
 
 The way builds are made is, compile in `Release` configuration, then run the script `DarkSoulsCloudSave\bin\MakeBuildFromRelease.bat`.
 
@@ -177,6 +174,10 @@ This creates a `Build\DarkSoulsCloudSave` folder and copies only the necessary f
 # For developers
 
 The `DarksSoulsCloudSave.Core` library contains most of the application logic, so if you want to create your own application or service, feel free to use this library as a working base.
+
+The Dropbox cloud storage implementation is in the `DarkSoulsCloudSave.DropboxExtension` library.
+
+An experimental `DarkSoulsCloudSave.GoogleDriveExtension` is also available and operational, but please read the `Experiments` section bellow before using it.
 
 # License
 
