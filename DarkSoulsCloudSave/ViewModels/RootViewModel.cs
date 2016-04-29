@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -105,8 +105,26 @@ namespace DarkSoulsCloudSave.ViewModels
             StartGameProcessMonitoring();
         }
 
-        public void Close()
+        public void Close(CancelEventArgs e)
         {
+            string action = null;
+
+            if (IsStoring)
+                action = "Store";
+            else if (IsRestoring)
+                action = "Restore";
+
+            if (action != null)
+            {
+                MessageBox.Show(
+                    $"{action} operation is underway, closing application is interrupted to avoid possible data corruption",
+                    $"{action} underway",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                e.Cancel = true;
+                return;
+            }
+
             gameProcessMonitoring.Set();
         }
 

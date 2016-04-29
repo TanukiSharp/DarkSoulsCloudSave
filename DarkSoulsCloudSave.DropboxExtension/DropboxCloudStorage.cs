@@ -18,7 +18,6 @@ namespace DarkSoulsCloudSave.DropboxExtension
     public class DropboxCloudStorage : ICloudStorage
     {
         private DropboxClient dropboxClient;
-        private IReadOnlyDictionary<string, string> config;
 
         private const string AppKey = "cwoecqgt2xtma0l";
         private const string AppSecret = "2a3si3j0kvgrush"; // <- not that secret in that case
@@ -31,7 +30,7 @@ namespace DarkSoulsCloudSave.DropboxExtension
         {
             string accessToken;
 
-            config = ConfigurationUtility.ReadConfigurationFile(GetType());
+            IReadOnlyDictionary<string, string> config = ConfigurationUtility.ReadConfigurationFile(GetType());
 
             if (config.TryGetValue("AccessToken", out accessToken) && string.IsNullOrWhiteSpace(accessToken) == false)
                 accessToken = SecurityUtility.UnprotectString(accessToken, DataProtectionScope.CurrentUser);

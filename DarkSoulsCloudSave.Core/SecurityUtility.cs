@@ -36,6 +36,26 @@ namespace DarkSoulsCloudSave.Core
         }
 
         /// <summary>
+        /// Protects (encrypts) a byte array.
+        /// </summary>
+        /// <param name="unprotectedBinaryValue">The unprotected byte array value to protect.</param>
+        /// <param name="scope">The protection scope.</param>
+        /// <returns>Returns a base64 encoded protected string, or null on error.</returns>
+        /// <seealso cref="UnprotectBuffer(string, DataProtectionScope)"/>
+        public static string ProtectBuffer(byte[] unprotectedBinaryValue, DataProtectionScope scope)
+        {
+            try
+            {
+                var protectedBinaryValue = ProtectedData.Protect(unprotectedBinaryValue, ProtectionEntropy, scope);
+                return Convert.ToBase64String(protectedBinaryValue);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Unprotects (decrypts) a string.
         /// </summary>
         /// <param name="protectedValue">The base64 encoded protected string to unprotect.</param>
@@ -48,6 +68,26 @@ namespace DarkSoulsCloudSave.Core
                 var protectedBinaryValue = Convert.FromBase64String(protectedValue);
                 var unprotectedBinaryValue = ProtectedData.Unprotect(protectedBinaryValue, ProtectionEntropy, scope);
                 return Encoding.UTF8.GetString(unprotectedBinaryValue);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Unprotects (decrypts) a byte array.
+        /// </summary>
+        /// <param name="protectedValue">The base64 encoded protected byte array to unprotect.</param>
+        /// <param name="scope">The protection scope.</param>
+        /// <returns>Returns unprotected byte array value, or null on error.</returns>
+        public static byte[] UnprotectBuffer(string protectedValue, DataProtectionScope scope)
+        {
+            try
+            {
+                var protectedBinaryValue = Convert.FromBase64String(protectedValue);
+                var unprotectedBinaryValue = ProtectedData.Unprotect(protectedBinaryValue, ProtectionEntropy, scope);
+                return unprotectedBinaryValue;
             }
             catch
             {
