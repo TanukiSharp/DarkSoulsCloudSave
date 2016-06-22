@@ -1,3 +1,7 @@
+# Download [<img src="https://img.shields.io/badge/download-1.0.4-blue.svg" target="_blank">](https://github.com/TanukiSharp/DarkSoulsCloudSave/raw/master/Builds/DarkSoulsCloudSave_1.0.4.zip)
+
+There is a `Builds` directory that contains binaries ready to be executed, for the ones not familiar with technical aspects.
+
 # Overview
 
 DarkSoulsCloudSave is a software that helps you store and restore your Dark Souls 3 save data to and from the cloud.
@@ -149,10 +153,6 @@ You may need this for whatever reason, but be *sure to know what you do* if you 
 The application remembers the `Auto-store` and `Auto-restore` states. This is saved in the `DarkSoulsCloudSave.config` file.
 
 ![Configuration](Images/readme/file_config.png "Configuration")
-
-# Download
-
-There is a `Builds` directory that contains binaries ready to be executed, for the ones not familiar with technical aspects.
 
 # How to build from source code
 
