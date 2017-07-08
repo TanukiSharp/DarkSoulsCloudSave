@@ -1,4 +1,4 @@
-# Download [<img src="https://img.shields.io/badge/download-1.0.5-blue.svg" target="_blank">](https://github.com/TanukiSharp/DarkSoulsCloudSave/raw/master/Builds/DarkSoulsCloudSave_1.0.5.zip)
+# Download [<img src="https://img.shields.io/badge/download-1.0.6-blue.svg" target="_blank">](https://github.com/TanukiSharp/DarkSoulsCloudSave/raw/master/Builds/DarkSoulsCloudSave_1.0.6.zip)
 
 There is a `Builds` directory that contains binaries ready to be executed, for the ones not familiar with technical aspects.
 
