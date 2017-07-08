@@ -141,9 +141,13 @@ namespace DarkSoulsCloudSave.ViewModels
 
                 Status = "Cloud storage initialization done";
             }
-            catch
+            catch (Exception ex)
             {
-                Status = string.Format("Failed to initialize {0}", cloudStorage != null ? cloudStorage.GetType().Name : "cloud storage");
+                Status = string.Format(
+                    "Failed to initialize {0} ({1})",
+                    cloudStorage != null ? cloudStorage.GetType().Name : "cloud storage",
+                    ex.Message
+                );
             }
         }
 
