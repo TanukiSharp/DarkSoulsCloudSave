@@ -38,7 +38,7 @@ namespace DarkSoulsCloudSave.DropboxExtension
             if (string.IsNullOrWhiteSpace(accessToken))
             {
                 Uri authorizeUri = DropboxOAuth2Helper.GetAuthorizeUri(AppKey, false);
-                var url = authorizeUri.ToString();
+                string url = authorizeUri.ToString();
 
                 MessageBox.Show("After you click the OK button on this dialog, a web page asking you to allow the application will open, and then another one containing a code.\r\n\r\nOnce you see the code, please copy it to the clipboard by selecting it and pressing Ctrl+C, or right click and 'Copy' menu.", "Authorization", MessageBoxButton.OK, MessageBoxImage.Information);
                 Process.Start(url);
@@ -80,11 +80,11 @@ namespace DarkSoulsCloudSave.DropboxExtension
             if (dropboxClient == null)
                 throw new InvalidOperationException("Not initialized");
 
-            var list = await dropboxClient.Files.ListFolderAsync(string.Empty);
+            ListFolderResult list = await dropboxClient.Files.ListFolderAsync(string.Empty);
 
             return list.Entries
                 .Where(e => e.IsFile)
-                .Where(e => String.Equals(Path.GetExtension(e.Name), ".zip", StringComparison.InvariantCultureIgnoreCase))
+                .Where(e => string.Equals(Path.GetExtension(e.Name), ".zip", StringComparison.InvariantCultureIgnoreCase))
                 .Select(e => e.PathDisplay)
                 .ToArray();
         }
@@ -92,30 +92,30 @@ namespace DarkSoulsCloudSave.DropboxExtension
         /// <summary>
         /// Downloads a remote file from Dropbox, as a readable stream.
         /// </summary>
-        /// <param name="fullFilename">The full filename of the remote file to download from Dropbox.</param>
+        /// <param name="fileIdentifier">The full filename of the remote file to download from Dropbox.</param>
         /// <returns>Returns a readable stream representing the remote file to download.</returns>
-        public async Task<Stream> Download(string fullFilename)
+        public async Task<Stream> Download(string fileIdentifier)
         {
-            if (string.IsNullOrWhiteSpace(fullFilename))
-                throw new ArgumentException($"Invalid '{nameof(fullFilename)}' argument.", nameof(fullFilename));
+            if (string.IsNullOrWhiteSpace(fileIdentifier))
+                throw new ArgumentException($"Invalid '{nameof(fileIdentifier)}' argument.", nameof(fileIdentifier));
 
             if (dropboxClient == null)
                 throw new InvalidOperationException("Not initialized");
 
-            using (var response = await dropboxClient.Files.DownloadAsync(fullFilename))
+            using (var response = await dropboxClient.Files.DownloadAsync(fileIdentifier))
                 return new MemoryStream(await response.GetContentAsByteArrayAsync());
         }
 
         /// <summary>
         /// Uploads a local file to Dropbox.
         /// </summary>
-        /// <param name="fullFilename">The full filename to be given to the remote file.</param>
+        /// <param name="fileIdentifier">The full filename to be given to the remote file.</param>
         /// <param name="stream">A readable stream containing the local file content to upload to Dropbox.</param>
         /// <returns>Returns a task to be awaited until upload is done.</returns>
         public async Task<bool> Upload(string fileIdentifier, Stream stream)
         {
-            if (string.IsNullOrWhiteSpace(fullFilename))
-                throw new ArgumentException($"Invalid '{nameof(fullFilename)}' argument.", nameof(fullFilename));
+            if (string.IsNullOrWhiteSpace(fileIdentifier))
+                throw new ArgumentException($"Invalid '{nameof(fileIdentifier)}' argument.", nameof(fileIdentifier));
 
             if (stream == null || stream.CanRead == false)
                 throw new ArgumentException($"Invalid '{nameof(stream)}' argument. It must be a valid instance and being readable.", nameof(stream));
@@ -123,7 +123,9 @@ namespace DarkSoulsCloudSave.DropboxExtension
             if (dropboxClient == null)
                 throw new InvalidOperationException("Not initialized");
 
-            await dropboxClient.Files.UploadAsync(fullFilename, WriteMode.Overwrite.Instance, body: stream);
+            FileMetadata result = await dropboxClient.Files.UploadAsync(fileIdentifier, WriteMode.Overwrite.Instance, body: stream);
+
+            return true;
         }
 
         /// <summary>

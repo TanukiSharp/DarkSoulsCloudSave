@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Google.Apis.Upload;
 using Data = Google.Apis.Drive.v3.Data;
 
 namespace DarkSoulsCloudSave.GoogleDriveExtension
@@ -31,7 +32,7 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
         /// <returns>Returns a task to be awaited until the initialization process is done.</returns>
         public async Task Initialize()
         {
-            var path = ConfigurationUtility.GetExtensionConfigurationFilePath(GetType());
+            string path = ConfigurationUtility.GetExtensionConfigurationFilePath(GetType());
             path = Path.GetDirectoryName(path);
 
             UserCredential credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
@@ -64,13 +65,13 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
             request.Fields = "files(id, name, createdTime)";
 
             // getting all files, then filtering does not scale :(
-            var files = (await request.ExecuteAsync()).Files;
+            IList<Data.File> files = (await request.ExecuteAsync()).Files;
 
             var result = new List<string>();
 
-            foreach (var fileGroup in files.GroupBy(x => x.Name))
+            foreach (IGrouping<string, Data.File> fileGroup in files.GroupBy(x => x.Name))
             {
-                var newest = fileGroup.OrderByDescending(x => x.CreatedTime).FirstOrDefault();
+                Data.File newest = fileGroup.OrderByDescending(x => x.CreatedTime).FirstOrDefault();
                 if (newest != null)
                     result.Add(newest.Id);
             }
@@ -81,13 +82,13 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
         /// <summary>
         /// Downloads a remote file from Google Drive, as a readable stream.
         /// </summary>
-        /// <param name="fullFilename">The Id of the remote file to download from Google Drive.</param>
+        /// <param name="fileIdentifier">The Id of the remote file to download from Google Drive.</param>
         /// <returns>Returns a readable stream representing the remote file to download.</returns>
-        public async Task<Stream> Download(string fullFilename)
+        public async Task<Stream> Download(string fileIdentifier)
         {
             var stream = new MemoryStream();
 
-            FilesResource.GetRequest request = driveService.Files.Get(fullFilename);
+            FilesResource.GetRequest request = driveService.Files.Get(fileIdentifier);
 
             await request.DownloadAsync(stream);
 
@@ -97,20 +98,25 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
         /// <summary>
         /// Uploads a local file to Google Drive.
         /// </summary>
-        /// <param name="fullFilename">The full filename to be given to the remote file.</param>
+        /// <param name="fileIdentifier">The full filename to be given to the remote file.</param>
         /// <param name="stream">A readable stream containing the local file content to upload to Google Drive.</param>
         /// <returns>Returns a task to be awaited until upload is done.</returns>
         public async Task<bool> Upload(string fileIdentifier, Stream stream)
         {
             var fileMetadata = new Data.File
             {
-                Name = fullFilename,
+                Name = fileIdentifier,
                 Parents = new List<string>() { "appDataFolder" }
             };
 
-            var request = driveService.Files.Create(fileMetadata, stream, "application/octet-stream");
+            FilesResource.CreateMediaUpload request = driveService.Files.Create(fileMetadata, stream, "application/octet-stream");
 
-            var result = await request.UploadAsync();
+            IUploadProgress result = await request.UploadAsync();
+
+            if (result.Exception != null)
+                throw result.Exception;
+
+            return result.Status == UploadStatus.Completed;
         }
 
         /// <summary>
