@@ -100,7 +100,7 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
         /// <param name="fullFilename">The full filename to be given to the remote file.</param>
         /// <param name="stream">A readable stream containing the local file content to upload to Google Drive.</param>
         /// <returns>Returns a task to be awaited until upload is done.</returns>
-        public async Task Upload(string fullFilename, Stream stream)
+        public async Task<bool> Upload(string fileIdentifier, Stream stream)
         {
             var fileMetadata = new Data.File
             {
@@ -111,7 +111,20 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
             var request = driveService.Files.Create(fileMetadata, stream, "application/octet-stream");
 
             var result = await request.UploadAsync();
+        }
 
+        /// <summary>
+        /// Delete a file on Google Drive.
+        /// </summary>
+        /// <param name="fileIdentifier">The identifier of the remote file to delete.</param>
+        /// <returns>Returns a task to be awaited until delteion is done, true meaning success and false meaning a failure occured.</returns>
+        public async Task<bool> Delete(string fileIdentifier)
+        {
+            FilesResource.DeleteRequest request = driveService.Files.Delete(fileIdentifier);
+
+            string result = await request.ExecuteAsync();
+
+            return true;
         }
 
         /// <summary>

@@ -27,16 +27,23 @@ namespace DarkSoulsCloudSave.Core
         /// <summary>
         /// Downloads a remote file from the cloud storage as a readable stream.
         /// </summary>
-        /// <param name="fullFilename">The full filename of the remote file to download from the cloud storage.</param>
+        /// <param name="fileIdentifier">The identifier of the remote file to download from the cloud storage.</param>
         /// <returns>Returns a readable stream representing the remote file to download.</returns>
-        Task<Stream> Download(string fullFilename);
+        Task<Stream> Download(string fileIdentifier);
 
         /// <summary>
         /// Uploads a local file to the cloud storage.
         /// </summary>
-        /// <param name="fullFilename">The full filename to be given to the remote file.</param>
+        /// <param name="fileIdentifier">The identifier to be given to the remote file.</param>
         /// <param name="stream">A readable stream containing the local file content to upload to the cloud storage.</param>
-        /// <returns>Returns a task to be awaited until upload is done.</returns>
-        Task Upload(string fullFilename, Stream stream);
+        /// <returns>Returns a task to be awaited until upload is done, true meaning success and false meaning a failure occured.</returns>
+        Task<bool> Upload(string fileIdentifier, Stream stream);
+
+        /// <summary>
+        /// Delete a remote file on the cloud storage.
+        /// </summary>
+        /// <param name="fileIdentifier">The identifier of the remote file to delete.</param>
+        /// <returns>Returns a task to be awaited until delteion is done, true meaning success and false meaning a failure occured.</returns>
+        Task<bool> Delete(string fileIdentifier);
     }
 }
