@@ -58,7 +58,7 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
         /// Lists the files available in the remote app folder on the Google Drive.
         /// </summary>
         /// <returns>Returns an array of remote filenames.</returns>
-        public async Task<string[]> ListFiles()
+        public async Task<IEnumerable<CloudStorageFileInfo>> ListFiles()
         {
             FilesResource.ListRequest request = driveService.Files.List();
             request.Spaces = "appDataFolder";
@@ -67,16 +67,16 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
             // getting all files, then filtering does not scale :(
             IList<Data.File> files = (await request.ExecuteAsync()).Files;
 
-            var result = new List<string>();
+            var result = new List<CloudStorageFileInfo>();
 
             foreach (IGrouping<string, Data.File> fileGroup in files.GroupBy(x => x.Name))
             {
                 Data.File newest = fileGroup.OrderByDescending(x => x.CreatedTime).FirstOrDefault();
                 if (newest != null)
-                    result.Add(newest.Id);
+                    result.Add(new CloudStorageFileInfo(newest.OriginalFilename, newest.Id));
             }
 
-            return result.ToArray();
+            return result;
         }
 
         /// <summary>

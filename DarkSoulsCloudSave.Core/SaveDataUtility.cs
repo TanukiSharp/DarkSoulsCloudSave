@@ -46,7 +46,7 @@ namespace DarkSoulsCloudSave.Core
 
             using (var archive = new ZipArchive(stream, ZipArchiveMode.Create, true, Encoding.UTF8))
             {
-                var files = Directory.EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories);
+                IEnumerable<string> files = Directory.EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories);
                 foreach (string file in files)
                 {
                     string filename = file.Substring(SaveDataPath.Length + 1, file.Length - SaveDataPath.Length - 1);
@@ -60,6 +60,7 @@ namespace DarkSoulsCloudSave.Core
             }
 
             stream.Position = 0;
+
             return stream;
         }
 
@@ -93,14 +94,14 @@ namespace DarkSoulsCloudSave.Core
         /// <returns>Returns a task to be awaited until the backup process is done.</returns>
         public static async Task BackupLocalSaveData()
         {
-            var now = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-fff");
+            string now = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-fff");
 
             if (Directory.Exists(SaveDataPath) == false)
                 return;
 
             foreach (string directory in Directory.GetDirectories(SaveDataPath, "*", SearchOption.TopDirectoryOnly))
             {
-                var filename = string.Format("{0}_{1}.zip", Path.GetFileName(directory), now);
+                string filename = string.Format("{0}_{1}.zip", Path.GetFileName(directory), now);
 
                 Stream archiveStream = await GetSaveDataArchive(directory);
                 using (var targetStream = new FileStream(Path.Combine(BackupsPath, filename), FileMode.OpenOrCreate, FileAccess.Write))

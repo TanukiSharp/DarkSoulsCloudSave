@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DarkSoulsCloudSave</RootNamespace>
     <AssemblyName>DarkSoulsCloudSave</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -120,10 +121,6 @@
     <ProjectReference Include="..\DarkSoulsCloudSave.Core\DarkSoulsCloudSave.Core.csproj">
       <Project>{1b6bb7e7-1de9-46d5-a288-e40efd56dc61}</Project>
       <Name>DarkSoulsCloudSave.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DarkSoulsCloudSave.DropboxExtension\DarkSoulsCloudSave.DropboxExtension.csproj">
-      <Project>{d22444be-b794-40f4-80d5-f716f7afcc67}</Project>
-      <Name>DarkSoulsCloudSave.DropboxExtension</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
