@@ -73,7 +73,13 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
             {
                 Data.File newest = fileGroup.OrderByDescending(x => x.CreatedTime).FirstOrDefault();
                 if (newest != null)
-                    result.Add(new CloudStorageFileInfo(newest.OriginalFilename, newest.Id));
+                {
+                    string name = newest.OriginalFilename ?? newest.Name;
+                    if (name == null)
+                        continue;
+                    name = name.TrimStart('/');
+                    result.Add(CloudStorageFileInfo.ParseCloudStorageFileInfo(name, newest.Id));
+                }
             }
 
             return result;
@@ -82,15 +88,16 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
         /// <summary>
         /// Downloads a remote file from Google Drive, as a readable stream.
         /// </summary>
-        /// <param name="fileIdentifier">The Id of the remote file to download from Google Drive.</param>
+        /// <param name="fileInfo">The file identifier representing the remote file to download from Google Drive.</param>
         /// <returns>Returns a readable stream representing the remote file to download.</returns>
-        public async Task<Stream> Download(string fileIdentifier)
+        public async Task<Stream> Download(CloudStorageFileInfo fileInfo)
         {
             var stream = new MemoryStream();
 
-            FilesResource.GetRequest request = driveService.Files.Get(fileIdentifier);
+            FilesResource.GetRequest request = driveService.Files.Get(fileInfo.RemoteFileIdentifier);
 
             await request.DownloadAsync(stream);
+            stream.Position = 0;
 
             return stream;
         }
@@ -122,15 +129,15 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
         /// <summary>
         /// Delete a file on Google Drive.
         /// </summary>
-        /// <param name="fileIdentifier">The identifier of the remote file to delete.</param>
+        /// <param name="fileInfo">The file information representing the remote file to delete.</param>
         /// <returns>Returns a task to be awaited until delteion is done, true meaning success and false meaning a failure occured.</returns>
-        public async Task<bool> Delete(string fileIdentifier)
+        public async Task<bool> Delete(CloudStorageFileInfo fileInfo)
         {
-            FilesResource.DeleteRequest request = driveService.Files.Delete(fileIdentifier);
+            FilesResource.DeleteRequest request = driveService.Files.Delete(fileInfo.RemoteFileIdentifier);
 
             string result = await request.ExecuteAsync();
 
-            return true;
+            return result == string.Empty;
         }
 
         /// <summary>

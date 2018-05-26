@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,16 @@ namespace DarkSoulsCloudSave.Core
     public struct CloudStorageFileInfo
     {
         /// <summary>
+        /// Date and time format used to prefix filenames.
+        /// </summary>
+        public const string TimestampFormat = "yyyyMMddHHmmssfff";
+
+        /// <summary>
+        /// Gets the date and time when the file was stored to the cloud.
+        /// </summary>
+        public DateTime StoreTimestamp { get; }
+
+        /// <summary>
         /// Gets the name of the file stored, or to be stored, on the local machine.
         /// </summary>
         public string LocalFilename { get; }
@@ -23,14 +34,42 @@ namespace DarkSoulsCloudSave.Core
         public string RemoteFileIdentifier { get; }
 
         /// <summary>
-        /// 
+        /// Gets an original remote file name (timestamped local filename).
         /// </summary>
-        /// <param name="localFilename"></param>
-        /// <param name="remoteFileIdentifier"></param>
-        public CloudStorageFileInfo(string localFilename, string remoteFileIdentifier)
+        public string OriginalRemoteFilename { get; }
+
+        /// <summary>
+        /// Initializes a <see cref="CloudStorageFileInfo"/> instance.
+        /// </summary>
+        /// <param name="localFilename">The name of the file stored, or to be stored, on the local machine.</param>
+        /// <param name="remoteFileIdentifier">The identifier that uniquely represent a file on the remote cloud.</param>
+        /// 
+        public static CloudStorageFileInfo ParseCloudStorageFileInfo(string localFilename, string remoteFileIdentifier)
         {
+            if (localFilename.Length > TimestampFormat.Length + 1 && localFilename[TimestampFormat.Length] == '_')
+            {
+                if (DateTime.TryParseExact(localFilename.Substring(0, TimestampFormat.Length), TimestampFormat, null, DateTimeStyles.None, out DateTime dt))
+                    return new CloudStorageFileInfo(dt, localFilename.Substring(TimestampFormat.Length + 1), localFilename, remoteFileIdentifier);
+            }
+
+            return new CloudStorageFileInfo(DateTime.MinValue, localFilename, localFilename, remoteFileIdentifier);
+        }
+
+        private CloudStorageFileInfo(DateTime storeTimestamp, string localFilename, string originalRemoteFilename, string remoteFileIdentifier)
+        {
+            StoreTimestamp = storeTimestamp;
             LocalFilename = localFilename;
+            OriginalRemoteFilename = originalRemoteFilename;
             RemoteFileIdentifier = remoteFileIdentifier;
+        }
+
+        /// <summary>
+        /// Returns a string representation of the current file information.
+        /// </summary>
+        /// <returns>Returns a string representation of the current file information.</returns>
+        public override string ToString()
+        {
+            return $"{LocalFilename} ({RemoteFileIdentifier})";
         }
     }
 
@@ -52,11 +91,11 @@ namespace DarkSoulsCloudSave.Core
         Task<IEnumerable<CloudStorageFileInfo>> ListFiles();
 
         /// <summary>
-        /// 
+        /// Downloads a remote file to a local stream.
         /// </summary>
-        /// <param name="remoteFileIdentifier"></param>
-        /// <returns></returns>
-        Task<Stream> Download(string remoteFileIdentifier);
+        /// <param name="fileInfo">The file information representing the remote file to download.</param>
+        /// <returns>Returns a task to be awaited producing a stream containing the content of the remote file.</returns>
+        Task<Stream> Download(CloudStorageFileInfo fileInfo);
 
         /// <summary>
         /// Uploads a local file to the cloud storage.
@@ -69,8 +108,8 @@ namespace DarkSoulsCloudSave.Core
         /// <summary>
         /// Delete a remote file on the cloud storage.
         /// </summary>
-        /// <param name="remoteFileIdentifier">The identifier of the remote file to delete.</param>
+        /// <param name="fileInfo">The file information representing the remote file to delete.</param>
         /// <returns>Returns a task to be awaited until delteion is done, true meaning success and false meaning a failure occured.</returns>
-        Task<bool> Delete(string remoteFileIdentifier);
+        Task<bool> Delete(CloudStorageFileInfo fileInfo);
     }
 }

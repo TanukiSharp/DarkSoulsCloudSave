@@ -10,6 +10,5 @@ namespace DarkSoulsCloudSave
     {
         public const string SteamUrl = "steam://rungameid/374320";
         public const string ProcessName = "DarkSoulsIII";
-        public const string TimestampFormat = "yyyyMMddHHmmssfff";
     }
 }

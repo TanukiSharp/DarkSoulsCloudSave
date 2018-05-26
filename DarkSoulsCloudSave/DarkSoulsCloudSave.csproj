@@ -122,6 +122,14 @@
       <Project>{1b6bb7e7-1de9-46d5-a288-e40efd56dc61}</Project>
       <Name>DarkSoulsCloudSave.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DarkSoulsCloudSave.DropboxExtension\DarkSoulsCloudSave.DropboxExtension.csproj">
+      <Project>{d22444be-b794-40f4-80d5-f716f7afcc67}</Project>
+      <Name>DarkSoulsCloudSave.DropboxExtension</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DarkSoulsCloudSave.GoogleDriveExtension\DarkSoulsCloudSave.GoogleDriveExtension.csproj">
+      <Project>{8e5832c8-f77d-48f5-8c1f-1545c4adb3e7}</Project>
+      <Name>DarkSoulsCloudSave.GoogleDriveExtension</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

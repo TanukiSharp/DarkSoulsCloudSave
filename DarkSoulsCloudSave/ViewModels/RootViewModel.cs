@@ -145,7 +145,7 @@ namespace DarkSoulsCloudSave.ViewModels
                 return Task.FromResult(Enumerable.Empty<CloudStorageFileInfo>());
             }
 
-            public Task<Stream> Download(string remoteFileIdentifier)
+            public Task<Stream> Download(CloudStorageFileInfo fileInfo)
             {
                 return Task.FromResult(Stream.Null);
             }
@@ -155,7 +155,7 @@ namespace DarkSoulsCloudSave.ViewModels
                 return Task.FromResult(true);
             }
 
-            public Task<bool> Delete(string fileIdentifier)
+            public Task<bool> Delete(CloudStorageFileInfo fileInfo)
             {
                 return Task.FromResult(true);
             }
@@ -167,8 +167,8 @@ namespace DarkSoulsCloudSave.ViewModels
 
             try
             {
-                cloudStorage = new NullCloudStorage();
-                //cloudStorage = new DropboxExtension.DropboxCloudStorage();
+                //cloudStorage = new NullCloudStorage();
+                cloudStorage = new DropboxExtension.DropboxCloudStorage();
                 //cloudStorage = new GoogleDriveExtension.GoogleDriveCloudStorage();
 
                 await cloudStorage.Initialize();
@@ -381,8 +381,8 @@ namespace DarkSoulsCloudSave.ViewModels
                 {
                     Status = string.Format("Restoring {0}...", Path.GetFileNameWithoutExtension(fileInfo.LocalFilename));
 
-                    Stream archiveStream = await cloudStorage.Download(fileInfo.RemoteFileIdentifier);
-                    await SaveDataUtility.ExtractSaveDataArchive(archiveStream);
+                    using (Stream archiveStream = await cloudStorage.Download(fileInfo))
+                        await SaveDataUtility.ExtractSaveDataArchive(archiveStream);
                 }
 
                 if (fileGroups.Count > configuration.RevisionsToKeep)
@@ -392,7 +392,6 @@ namespace DarkSoulsCloudSave.ViewModels
                     IEnumerable<Task<bool>> deleteTasks = fileGroups
                         .Skip(configuration.RevisionsToKeep)
                         .SelectMany(x => x)
-                        .Select(x => x.RemoteFileIdentifier)
                         .Select(cloudStorage.Delete)
                         .ToList();
 
@@ -426,16 +425,16 @@ namespace DarkSoulsCloudSave.ViewModels
 
             try
             {
-                string timestamp = DateTime.UtcNow.ToString(Constants.TimestampFormat);
+                string timestamp = DateTime.UtcNow.ToString(CloudStorageFileInfo.TimestampFormat);
 
                 foreach (string directory in Directory.GetDirectories(SaveDataUtility.SaveDataPath, "*", SearchOption.TopDirectoryOnly))
                 {
-                    string filename = Path.GetFileName(directory) + ".zip";
+                    string filename = Path.GetFileName(directory);
 
-                    Status = string.Format("Storing {0}...", Path.GetFileNameWithoutExtension(filename));
+                    Status = string.Format("Storing {0}...", filename);
 
                     Stream archiveStream = await SaveDataUtility.GetSaveDataArchive(directory);
-                    await cloudStorage.Upload($"/{timestamp}_{filename}", archiveStream);
+                    await cloudStorage.Upload($"/{timestamp}_{filename}.zip", archiveStream);
                 }
 
                 Status = "Store done";
@@ -453,20 +452,9 @@ namespace DarkSoulsCloudSave.ViewModels
         private IList<IGrouping<DateTime, CloudStorageFileInfo>> GroupArchives(IEnumerable<CloudStorageFileInfo> files)
         {
             return files
-                .Select(ExtractTimestamp)
-                .OrderBy(x => x.timestamp)
-                .GroupBy(x => x.timestamp, x => x.fileInfo)
+                .OrderByDescending(x => x.StoreTimestamp)
+                .GroupBy(x => x.StoreTimestamp)
                 .ToList();
-        }
-
-        private (DateTime timestamp, CloudStorageFileInfo fileInfo) ExtractTimestamp(CloudStorageFileInfo fileInfo)
-        {
-            if (fileInfo.LocalFilename.Length > Constants.TimestampFormat.Length + 1)
-            {
-                if (DateTime.TryParseExact(fileInfo.LocalFilename.Substring(0, Constants.TimestampFormat.Length), Constants.TimestampFormat, null, DateTimeStyles.None, out DateTime dt))
-                    return (dt, fileInfo);
-            }
-            return (DateTime.MinValue, fileInfo);
         }
     }
 }

@@ -86,25 +86,25 @@ namespace DarkSoulsCloudSave.DropboxExtension
             return list.Entries
                 .Where(e => e.IsFile)
                 .Where(e => string.Equals(Path.GetExtension(e.Name), ".zip", StringComparison.InvariantCultureIgnoreCase))
-                .Select(e => new CloudStorageFileInfo(e.Name, e.Name))
+                .Select(e => CloudStorageFileInfo.ParseCloudStorageFileInfo(e.Name, e.AsFile.Id))
                 .ToArray();
         }
 
         /// <summary>
         /// Downloads a remote file from Dropbox, as a readable stream.
         /// </summary>
-        /// <param name="remoteFileIdentifier">The full filename of the remote file to download from Dropbox.</param>
+        /// <param name="fileInfo">The file information representing the remote file to download from Dropbox.</param>
         /// <returns>Returns a readable stream representing the remote file to download.</returns>
-        public async Task<Stream> Download(string remoteFileIdentifier)
+        public async Task<Stream> Download(CloudStorageFileInfo fileInfo)
         {
-            if (string.IsNullOrWhiteSpace(remoteFileIdentifier))
-                throw new ArgumentException($"Invalid '{nameof(remoteFileIdentifier)}' argument.", nameof(remoteFileIdentifier));
+            if (string.IsNullOrWhiteSpace(fileInfo.RemoteFileIdentifier))
+                throw new ArgumentException($"Invalid '{nameof(fileInfo)}' argument.", nameof(fileInfo));
 
             if (dropboxClient == null)
                 throw new InvalidOperationException("Not initialized");
 
-            using (IDownloadResponse<FileMetadata> response = await dropboxClient.Files.DownloadAsync(remoteFileIdentifier))
-                return await response.GetContentAsStreamAsync();
+            IDownloadResponse<FileMetadata> response = await dropboxClient.Files.DownloadAsync(fileInfo.RemoteFileIdentifier);
+            return await response.GetContentAsStreamAsync();
         }
 
         /// <summary>
@@ -134,19 +134,19 @@ namespace DarkSoulsCloudSave.DropboxExtension
         /// <summary>
         /// Delete a remote file on Dropbox.
         /// </summary>
-        /// <param name="fileIdentifier">The identifier of the remote file to delete.</param>
+        /// <param name="fileInfo">The identifier of the remote file to delete.</param>
         /// <returns>Returns a task to be awaited until delteion is done, true meaning success and false meaning a failure occured.</returns>
-        public async Task<bool> Delete(string fileIdentifier)
+        public async Task<bool> Delete(CloudStorageFileInfo fileInfo)
         {
-            if (string.IsNullOrWhiteSpace(fileIdentifier))
-                throw new ArgumentException($"Invalid '{nameof(fileIdentifier)}' argument.", nameof(fileIdentifier));
+            if (string.IsNullOrWhiteSpace(fileInfo.LocalFilename))
+                throw new ArgumentException($"Invalid '{nameof(fileInfo)}' argument.", nameof(fileInfo));
 
             if (dropboxClient == null)
                 throw new InvalidOperationException("Not initialized");
 
-            Metadata result = await dropboxClient.Files.DeleteAsync(fileIdentifier);
+            Metadata result = await dropboxClient.Files.DeleteAsync("/" + fileInfo.LocalFilename);
 
-            return true;
+            return result?.AsFile?.Id == fileInfo.RemoteFileIdentifier;
         }
 
         /// <summary>
