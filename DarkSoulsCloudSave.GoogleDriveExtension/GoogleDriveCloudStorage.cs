@@ -1,4 +1,4 @@
-﻿using DarkSoulsCloudSave.Core;
+using DarkSoulsCloudSave.Core;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 using Google.Apis.Services;
@@ -48,7 +48,6 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
 
             driveService = new DriveService(new BaseClientService.Initializer()
             {
-                
                 HttpClientInitializer = credential,
                 ApplicationName = ApplicationName,
             });

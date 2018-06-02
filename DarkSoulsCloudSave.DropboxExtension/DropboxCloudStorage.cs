@@ -125,7 +125,7 @@ namespace DarkSoulsCloudSave.DropboxExtension
                 throw new InvalidOperationException("Not initialized");
 
             var commitInfo = new CommitInfo(localFilename, WriteMode.Overwrite.Instance, false, null, true);
-            
+
             FileMetadata result = await dropboxClient.Files.UploadAsync(commitInfo, stream);
 
             return true;
