@@ -79,7 +79,7 @@ If this is not the case, please file an issue and I will try to answer as fast a
 ![Authorization](Images/readme/authorization6.png "Authorization")
 ![Authorization](Images/readme/authorization7.png "Authorization")
 
-Note: This procedure has to be done only once, be it has to be done on each machine you want to use the application.
+Note: This procedure has to be done only once, but it has to be done on each machine you want to use the application.
 
 # Security considerations
 
