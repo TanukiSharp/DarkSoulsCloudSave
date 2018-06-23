@@ -37,7 +37,7 @@ https://msdn.microsoft.com/en-us/library/8z6watww(v=vs.110).aspx
 Put the application on your disk where it has read and write access.
 For example, avoid using `Program Files` folder.
 
-# Authorization
+# Authorization with Dropbox
 
 When you run the application for the first time, it needs to be authorized to access your Dropbox account.
 Hereafter is the procedure.

@@ -13,13 +13,18 @@ using System.Diagnostics;
 using System.Threading;
 using System.Windows.Threading;
 using System.ComponentModel;
-using System.Globalization;
 
 namespace DarkSoulsCloudSave.ViewModels
 {
     public class RootViewModel : ViewModelBase
     {
-        private ICloudStorage cloudStorage;
+        private IList<ICloudStorage> cloudStorages = new List<ICloudStorage>
+        {
+            //new NullCloudStorage(),
+            new DropboxExtension.DropboxCloudStorage(),
+            new GoogleDriveExtension.GoogleDriveCloudStorage()
+        };
+        private int selectedStoreCloudStorageIndex = 0;
 
         public string Version { get; private set; }
 
@@ -101,7 +106,8 @@ namespace DarkSoulsCloudSave.ViewModels
             IsAutoStore = configuration.AutoStore;
             IsAutoRestore = configuration.AutoRestore;
 
-            InitializeCloudStorage();
+            foreach (ICloudStorage cloudStorage in cloudStorages)
+                InitializeCloudStorage(cloudStorage);
 
             StartGameProcessMonitoring();
         }
@@ -161,16 +167,12 @@ namespace DarkSoulsCloudSave.ViewModels
             }
         }
 
-        private async void InitializeCloudStorage()
+        private async void InitializeCloudStorage(ICloudStorage cloudStorage)
         {
             Status = "Initializing cloud storage...";
 
             try
             {
-                //cloudStorage = new NullCloudStorage();
-                cloudStorage = new DropboxExtension.DropboxCloudStorage();
-                //cloudStorage = new GoogleDriveExtension.GoogleDriveCloudStorage();
-
                 await cloudStorage.Initialize();
 
                 Status = "Cloud storage initialization done";
@@ -369,42 +371,8 @@ namespace DarkSoulsCloudSave.ViewModels
 
                 Status = "Retrieving save data list...";
 
-                IList<IGrouping<DateTime, CloudStorageFileInfo>> fileGroups = GroupArchives(await cloudStorage.ListFiles());
-
-                if (fileGroups.Count == 0)
-                {
-                    Status = "No save data";
-                    return;
-                }
-
-                foreach (CloudStorageFileInfo fileInfo in fileGroups[0])
-                {
-                    Status = string.Format("Restoring {0}...", Path.GetFileNameWithoutExtension(fileInfo.LocalFilename));
-
-                    using (Stream archiveStream = await cloudStorage.Download(fileInfo))
-                        await SaveDataUtility.ExtractSaveDataArchive(archiveStream);
-                }
-
-                if (fileGroups.Count > configuration.RevisionsToKeep)
-                {
-                    Status = "Cleaning up...";
-
-                    IEnumerable<Task<bool>> deleteTasks = fileGroups
-                        .Skip(configuration.RevisionsToKeep)
-                        .SelectMany(x => x)
-                        .Select(cloudStorage.Delete)
-                        .ToList();
-
-                    await Task.WhenAll(deleteTasks);
-
-                    if (deleteTasks.Any(x => x.Result) == false)
-                    {
-                        Status = "Error: At least one deletion task failed";
-                        return;
-                    }
-                }
-
-                Status = "Restore done";
+                if (await RestoreFromCloudStorage(cloudStorages[selectedStoreCloudStorageIndex]))
+                    Status = "Restore done";
             }
             catch (Exception ex)
             {
@@ -414,6 +382,46 @@ namespace DarkSoulsCloudSave.ViewModels
             {
                 IsRestoring = false;
             }
+        }
+
+        private async Task<bool> RestoreFromCloudStorage(ICloudStorage cloudStorage)
+        {
+            IList<IGrouping<DateTime, CloudStorageFileInfo>> fileGroups = GroupArchives(await cloudStorage.ListFiles());
+
+            if (fileGroups.Count == 0)
+            {
+                Status = "No save data";
+                return true;
+            }
+
+            foreach (CloudStorageFileInfo fileInfo in fileGroups[0])
+            {
+                Status = string.Format("Restoring {0}...", Path.GetFileNameWithoutExtension(fileInfo.LocalFilename));
+
+                using (Stream archiveStream = await cloudStorage.Download(fileInfo))
+                    await SaveDataUtility.ExtractSaveDataArchive(archiveStream);
+            }
+
+            if (fileGroups.Count > configuration.RevisionsToKeep)
+            {
+                Status = "Cleaning up...";
+
+                IEnumerable<Task<bool>> deleteTasks = fileGroups
+                    .Skip(configuration.RevisionsToKeep)
+                    .SelectMany(x => x)
+                    .Select(cloudStorage.Delete)
+                    .ToList();
+
+                await Task.WhenAll(deleteTasks);
+
+                if (deleteTasks.Any(x => x.Result) == false)
+                {
+                    Status = "Error: At least one deletion task failed";
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private async Task RunStoreProcess()
@@ -427,14 +435,17 @@ namespace DarkSoulsCloudSave.ViewModels
             {
                 string timestamp = DateTime.UtcNow.ToString(CloudStorageFileInfo.TimestampFormat);
 
-                foreach (string directory in Directory.GetDirectories(SaveDataUtility.SaveDataPath, "*", SearchOption.TopDirectoryOnly))
+                foreach (ICloudStorage cloudStorage in cloudStorages)
                 {
-                    string filename = Path.GetFileName(directory);
+                    foreach (string directory in Directory.GetDirectories(SaveDataUtility.SaveDataPath, "*", SearchOption.TopDirectoryOnly))
+                    {
+                        string filename = Path.GetFileName(directory);
 
-                    Status = string.Format("Storing {0}...", filename);
+                        Status = string.Format("Storing {0}...", filename);
 
-                    Stream archiveStream = await SaveDataUtility.GetSaveDataArchive(directory);
-                    await cloudStorage.Upload($"/{timestamp}_{filename}.zip", archiveStream);
+                        Stream archiveStream = await SaveDataUtility.GetSaveDataArchive(directory);
+                        await cloudStorage.Upload($"/{timestamp}_{filename}.zip", archiveStream);
+                    }
                 }
 
                 Status = "Store done";

@@ -100,7 +100,7 @@ namespace DarkSoulsCloudSave.Core
         /// <summary>
         /// Uploads a local file to the cloud storage.
         /// </summary>
-        /// <param name="localFilename">The filename of the local file to upload.</param>
+        /// <param name="localFilename">The name of the local file being uploaded.</param>
         /// <param name="stream">A readable stream containing the local file content to upload to the cloud storage.</param>
         /// <returns>Returns a task to be awaited until upload is done, true meaning success and false meaning a failure occured.</returns>
         Task<bool> Upload(string localFilename, Stream stream);
