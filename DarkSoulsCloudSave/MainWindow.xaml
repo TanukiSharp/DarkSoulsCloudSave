@@ -5,6 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DarkSoulsCloudSave"
         mc:Ignorable="d"
-        Title="Dark Souls 3 - Cloud Save" Height="480" Width="600" Background="WhiteSmoke" Icon="Resources/Game.png" WindowStartupLocation="CenterScreen">
+        Title="Dark Souls 3 - Cloud Save" Height="480" Width="800" Background="WhiteSmoke" Icon="Resources/Game.png" WindowStartupLocation="CenterScreen">
     <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RootView}" HorizontalAlignment="Stretch" Focusable="False"/>
 </Window>

@@ -18,13 +18,14 @@ namespace DarkSoulsCloudSave.ViewModels
 {
     public class RootViewModel : ViewModelBase
     {
-        private IList<ICloudStorage> cloudStorages = new List<ICloudStorage>
+        private readonly IList<ICloudStorage> availableCloudStorages = new List<ICloudStorage>
         {
             //new NullCloudStorage(),
             new DropboxExtension.DropboxCloudStorage(),
             new GoogleDriveExtension.GoogleDriveCloudStorage()
         };
-        private int selectedStoreCloudStorageIndex = 0;
+
+        public IList<CloudStorageViewModel> CloudStorageViewModels { get; }
 
         public string Version { get; private set; }
 
@@ -82,8 +83,6 @@ namespace DarkSoulsCloudSave.ViewModels
             set { SetValue(ref status, value); }
         }
 
-        public ICommand StoragesCommand { get; }
-
         public ICommand RestoreCommand { get; }
         public ICommand StartGameCommand { get; }
         public ICommand StoreCommand { get; }
@@ -94,26 +93,93 @@ namespace DarkSoulsCloudSave.ViewModels
 
         public RootViewModel()
         {
-            StoragesCommand = new AnonymousCommand(OnStorages);
-
             RestoreCommand = new AnonymousCommand(OnRestore);
             StartGameCommand = new AnonymousCommand(OnStartGame);
             StoreCommand = new AnonymousCommand(OnStore);
 
             CopyVersionCommand = new AnonymousCommand(OnCopyVersion);
 
+            CloudStorageViewModels = availableCloudStorages
+                .Where(x => x != null)
+                .Select(x => new CloudStorageViewModel(x, this))
+                .ToList();
+
             Version v = Assembly.GetEntryAssembly().GetName().Version;
             Version = $"{v.Major}.{v.Minor}.{v.Build}";
+        }
+
+        private bool isInitializing;
+
+        public void Initialize()
+        {
+            isInitializing = true;
 
             configuration = LoadConfiguration();
+
+            ConfigureStorageViewModels(configuration);
 
             IsAutoStore = configuration.AutoStore;
             IsAutoRestore = configuration.AutoRestore;
 
-            foreach (ICloudStorage cloudStorage in cloudStorages)
-                InitializeCloudStorage(cloudStorage);
-
             StartGameProcessMonitoring();
+
+            isInitializing = false;
+
+            CloudStorageSelectionChanged();
+        }
+
+        internal void CloudStorageSelectionChanged()
+        {
+            if (isInitializing)
+                return;
+
+            SaveCloudStorageSelection();
+            InitializeCloudStorages();
+
+            if (CheckCloudStorageSelectionValid() == false)
+                Status = "Warning: incorrect cloud storage selection";
+            else
+                Status = null;
+        }
+
+        private void InitializeCloudStorages()
+        {
+            Task.WhenAll(
+                CloudStorageViewModels
+                    .Where(x => x.IsRestoreSource || x.IsStoreTarget)
+                    .Select(x => x.Initialize())
+            );
+        }
+
+        private void SaveCloudStorageSelection()
+        {
+            CloudStorageViewModel restoreCloudStorage = CloudStorageViewModels.FirstOrDefault(x => x.IsRestoreSource);
+            configuration.RestoreCloudStorage = restoreCloudStorage?.UniqueId;
+
+            string[] storeCloudStorageIds = CloudStorageViewModels
+                .Where(x => x.IsStoreTarget)
+                .Select(x => x.UniqueId)
+                .ToArray();
+
+            if (storeCloudStorageIds.Length > 0)
+                configuration.StoreCloudStorages = storeCloudStorageIds;
+            else
+                configuration.StoreCloudStorages = null;
+
+            configuration.Save(configuration.SettingsFilePath);
+        }
+
+        private bool isCloudStorageSelectionValid;
+        public bool IsCloudStorageSelectionValid
+        {
+            get { return isCloudStorageSelectionValid; }
+            private  set { SetValue(ref isCloudStorageSelectionValid, value); }
+        }
+
+        public bool CheckCloudStorageSelectionValid()
+        {
+            return CloudStorageViewModels.Any(x => x.IsStoreTarget) &&
+                CloudStorageViewModels.Any(x => x.IsRestoreSource);
         }
 
         public void Close(CancelEventArgs e)
@@ -173,26 +239,6 @@ namespace DarkSoulsCloudSave.ViewModels
             }
         }
 
-        private async void InitializeCloudStorage(ICloudStorage cloudStorage)
-        {
-            Status = "Initializing cloud storage...";
-
-            try
-            {
-                await cloudStorage.Initialize();
-
-                Status = "Cloud storage initialization done";
-            }
-            catch (Exception ex)
-            {
-                Status = string.Format(
-                    "Failed to initialize {0} ({1})",
-                    cloudStorage != null ? cloudStorage.GetType().Name : "cloud storage",
-                    ex.Message
-                );
-            }
-        }
-
         private Configuration LoadConfiguration()
         {
             Configuration configuration = null;
@@ -232,19 +278,6 @@ namespace DarkSoulsCloudSave.ViewModels
                     Status = "Error: " + ex.Message;
                 }
             }
-        }
-
-        private void OnStorages()
-        {
-            var x = new CloudStorageSelectorWindow(
-                cloudStorages,
-                null,
-                null
-            )
-            {
-            };
-
-            x.ShowDialog();
         }
 
         private async void OnRestore()
@@ -390,7 +423,16 @@ namespace DarkSoulsCloudSave.ViewModels
 
                 Status = "Retrieving save data list...";
 
-                if (await RestoreFromCloudStorage(cloudStorages[selectedStoreCloudStorageIndex]))
+                CloudStorageViewModel restoreSource = CloudStorageViewModels.FirstOrDefault(x => x.IsRestoreSource);
+
+                if (restoreSource == null)
+                {
+                    // should be impossible to fall in this case
+                    Status = "Error: Restore source cloud storage unavailable";
+                    return;
+                }
+
+                if (await RestoreFromCloudStorage(restoreSource.CloudStorage))
                     Status = "Restore done";
             }
             catch (Exception ex)
@@ -454,7 +496,7 @@ namespace DarkSoulsCloudSave.ViewModels
             {
                 string timestamp = DateTime.UtcNow.ToString(CloudStorageFileInfo.TimestampFormat);
 
-                foreach (ICloudStorage cloudStorage in cloudStorages)
+                foreach (CloudStorageViewModel vm in CloudStorageViewModels.Where(x => x.IsStoreTarget))
                 {
                     foreach (string directory in Directory.GetDirectories(SaveDataUtility.SaveDataPath, "*", SearchOption.TopDirectoryOnly))
                     {
@@ -463,7 +505,7 @@ namespace DarkSoulsCloudSave.ViewModels
                         Status = string.Format("Storing {0}...", filename);
 
                         Stream archiveStream = await SaveDataUtility.GetSaveDataArchive(directory);
-                        await cloudStorage.Upload($"/{timestamp}_{filename}.zip", archiveStream);
+                        await vm.CloudStorage.Upload($"/{timestamp}_{filename}.zip", archiveStream);
                     }
                 }
 
@@ -485,6 +527,24 @@ namespace DarkSoulsCloudSave.ViewModels
                 .OrderByDescending(x => x.StoreTimestamp)
                 .GroupBy(x => x.StoreTimestamp)
                 .ToList();
+        }
+
+        private void ConfigureStorageViewModels(Configuration configuration)
+        {
+            if (configuration.StoreCloudStorages != null)
+            {
+                foreach (CloudStorageViewModel vm in CloudStorageViewModels)
+                {
+                    foreach (string uniqueId in configuration.StoreCloudStorages)
+                    {
+                        if (vm.UniqueId == uniqueId)
+                            vm.IsStoreTarget = true;
+                    }
+                }
+            }
+
+            foreach (CloudStorageViewModel vm in CloudStorageViewModels)
+                vm.IsRestoreSource = vm.UniqueId == configuration.RestoreCloudStorage;
         }
     }
 }

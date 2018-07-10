@@ -16,6 +16,21 @@ namespace DarkSoulsCloudSave
         {
             InitializeComponent();
             DataContext = rootViewModel;
+
+            if (IsLoaded)
+                OnLoaded();
+            else
+                Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            OnLoaded();
+        }
+
+        private void OnLoaded()
+        {
+            rootViewModel.Initialize();
         }
 
         protected override void OnClosing(CancelEventArgs e)
