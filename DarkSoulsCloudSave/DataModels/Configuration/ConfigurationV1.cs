@@ -10,7 +10,6 @@ namespace DarkSoulsCloudSave.DataModels.Configuration.V1
     {
         public bool AutoRestore { get; set; }
         public bool AutoStore { get; set; }
-        public string Token { get; set; }
         public int RevisionsToKeep { get; set; } = 5;
     }
 }
