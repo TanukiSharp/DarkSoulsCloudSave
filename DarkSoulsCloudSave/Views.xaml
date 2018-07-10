@@ -6,6 +6,8 @@
 
         <DockPanel LastChildFill="True">
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Right" Margin="2">
+                <Button Content="Storages..." Command="{Binding StoragesCommand, Mode=OneTime}" Margin="2" Padding="4 2 4 2" HorizontalAlignment="Left"/>
+
                 <TextBlock FontSize="14" Text="by Tanuki" Margin="2,2,10,2"/>
                 <TextBlock FontSize="14" Text="{Binding Version, StringFormat=version {0}, Mode=OneTime}" Margin="2,2,4,2">
                     <TextBlock.ContextMenu>
@@ -69,5 +71,38 @@
             </DataTrigger>
         </DataTemplate.Triggers>
     </DataTemplate>
-    
+
+    <DataTemplate x:Key="CloudStorageSelectorView">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel>
+                <TextBlock Text="Store to:"/>
+                <ItemsControl Margin="16 4 0 16" ItemsSource="{Binding StoreTo}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Name, Mode=OneTime}" IsThreeState="False"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock Text="Restore from"/>
+                <ItemsControl Margin="16 4 0 16" ItemsSource="{Binding RestoreFrom}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <RadioButton GroupName="A" IsChecked="{Binding IsChecked}" Content="{Binding Name, Mode=OneTime}" IsThreeState="False"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <UniformGrid Grid.Row="1" Columns="2" HorizontalAlignment="Right">
+                <Button Content="OK" Command="{Binding AcceptCommand, Mode=OneTime}" Margin="4" Padding="4" MinWidth="60"/>
+                <Button Content="Cancel" Margin="4" Padding="4" MinWidth="60"/>
+            </UniformGrid>
+        </Grid>
+    </DataTemplate>
+
 </ResourceDictionary>

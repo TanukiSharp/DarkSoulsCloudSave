@@ -60,12 +60,21 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AnonymousCommand.cs" />
+    <Compile Include="CloudStorageSelectorWindow.xaml.cs">
+      <DependentUpon>CloudStorageSelectorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="DataModels\Configuration\ConfigurationBase.cs" />
     <Compile Include="DataModels\Configuration\ConfigurationV1.cs" />
     <Compile Include="ValueConverter\InverseBooleanValueConverter.cs" />
+    <Compile Include="ViewModels\CloudStorageSelectorViewModel.cs" />
+    <Compile Include="ViewModels\CloudStorageViewModel.cs" />
     <Compile Include="ViewModels\RootViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Page Include="CloudStorageSelectorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

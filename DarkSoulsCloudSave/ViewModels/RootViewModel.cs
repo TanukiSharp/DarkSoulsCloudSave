@@ -82,16 +82,20 @@ namespace DarkSoulsCloudSave.ViewModels
             set { SetValue(ref status, value); }
         }
 
-        public ICommand RestoreCommand { get; private set; }
-        public ICommand StartGameCommand { get; private set; }
-        public ICommand StoreCommand { get; private set; }
+        public ICommand StoragesCommand { get; }
 
-        public ICommand CopyVersionCommand { get; private set; }
+        public ICommand RestoreCommand { get; }
+        public ICommand StartGameCommand { get; }
+        public ICommand StoreCommand { get; }
+
+        public ICommand CopyVersionCommand { get; }
 
         private Configuration configuration;
 
         public RootViewModel()
         {
+            StoragesCommand = new AnonymousCommand(OnStorages);
+
             RestoreCommand = new AnonymousCommand(OnRestore);
             StartGameCommand = new AnonymousCommand(OnStartGame);
             StoreCommand = new AnonymousCommand(OnStore);
@@ -137,6 +141,8 @@ namespace DarkSoulsCloudSave.ViewModels
 
         private class NullCloudStorage : ICloudStorage
         {
+            public string Name => "Null cloud storage";
+
             public Task Initialize()
             {
                 return Task.CompletedTask;
@@ -226,6 +232,19 @@ namespace DarkSoulsCloudSave.ViewModels
                     Status = "Error: " + ex.Message;
                 }
             }
+        }
+
+        private void OnStorages()
+        {
+            var x = new CloudStorageSelectorWindow(
+                cloudStorages,
+                null,
+                null
+            )
+            {
+            };
+
+            x.ShowDialog();
         }
 
         private async void OnRestore()
