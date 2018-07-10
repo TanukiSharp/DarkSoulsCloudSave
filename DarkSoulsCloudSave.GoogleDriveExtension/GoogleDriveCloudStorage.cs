@@ -27,6 +27,11 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
         private DriveService driveService;
 
         /// <summary>
+        /// Gets the display name of the current <see cref="ICloudStorage"/> instance.
+        /// </summary>
+        public string Name => "Google Drive";
+
+        /// <summary>
         /// Initializes the Google Drive library, and ignites the authorization process if needed.
         /// </summary>
         /// <returns>Returns a task to be awaited until the initialization process is done.</returns>

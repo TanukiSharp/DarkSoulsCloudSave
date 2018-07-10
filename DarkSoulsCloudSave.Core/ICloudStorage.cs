@@ -79,6 +79,11 @@ namespace DarkSoulsCloudSave.Core
     public interface ICloudStorage : IDisposable
     {
         /// <summary>
+        /// Gets the display name of the current <see cref="ICloudStorage"/> instance.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
         /// Initializes the cloud storage.
         /// </summary>
         /// <returns>Returns a task to be awaited until initialization is done.</returns>

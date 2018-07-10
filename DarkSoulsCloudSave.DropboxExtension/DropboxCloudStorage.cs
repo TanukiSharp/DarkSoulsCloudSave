@@ -24,6 +24,11 @@ namespace DarkSoulsCloudSave.DropboxExtension
         private const string AppSecret = "2a3si3j0kvgrush"; // <- not that secret in that case
 
         /// <summary>
+        /// Gets the display name of the current <see cref="ICloudStorage"/> instance.
+        /// </summary>
+        public string Name => "Dropbox";
+
+        /// <summary>
         /// Initializes the Dropbox library, and ignites the authorization process if needed.
         /// </summary>
         /// <returns>Returns a task to be awaited until the initialization process is done.</returns>
