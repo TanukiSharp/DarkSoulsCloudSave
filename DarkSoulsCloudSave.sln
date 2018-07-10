@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkSoulsCloudSave.GoogleDr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkSoulsCloudSave.DropboxExtension", "DarkSoulsCloudSave.DropboxExtension\DarkSoulsCloudSave.DropboxExtension.csproj", "{D22444BE-B794-40F4-80D5-F716F7AFCC67}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkSoulsCloudSave.OneDriveExtension", "DarkSoulsCloudSave.OneDriveExtension\DarkSoulsCloudSave.OneDriveExtension.csproj", "{AFD2FA21-CC07-4964-936F-A41BE7C31C03}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,8 +35,15 @@ Global
 		{D22444BE-B794-40F4-80D5-F716F7AFCC67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D22444BE-B794-40F4-80D5-F716F7AFCC67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D22444BE-B794-40F4-80D5-F716F7AFCC67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFD2FA21-CC07-4964-936F-A41BE7C31C03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFD2FA21-CC07-4964-936F-A41BE7C31C03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFD2FA21-CC07-4964-936F-A41BE7C31C03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFD2FA21-CC07-4964-936F-A41BE7C31C03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8BA27A8B-3606-42C7-9BD2-45B4116FE504}
 	EndGlobalSection
 EndGlobal

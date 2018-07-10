@@ -81,6 +81,15 @@ If this is not the case, please file an issue and I will try to answer as fast a
 
 Note: This procedure has to be done only once, but it has to be done on each machine you want to use the application.
 
+# Authorization with Google Drive
+
+When you run the application for the first time, it needs to be authorized to access your Google Drive account.
+Hereafter is the procedure.
+
+*UNDERWAY*
+
+Note: This procedure has to be done only once, but it has to be done on each machine you want to use the application.
+
 # Security considerations
 
 Thanks to the code you provided to the application during the authorization process, an `access token` can be obtained from Dropbox.

@@ -130,6 +130,10 @@
       <Project>{8e5832c8-f77d-48f5-8c1f-1545c4adb3e7}</Project>
       <Name>DarkSoulsCloudSave.GoogleDriveExtension</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DarkSoulsCloudSave.OneDriveExtension\DarkSoulsCloudSave.OneDriveExtension.csproj">
+      <Project>{afd2fa21-cc07-4964-936f-a41be7c31c03}</Project>
+      <Name>DarkSoulsCloudSave.OneDriveExtension</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
