@@ -111,10 +111,17 @@ namespace DarkSoulsCloudSave.Core
         Task<bool> Upload(string localFilename, Stream stream);
 
         /// <summary>
-        /// Delete a remote file on the cloud storage.
+        /// Delete a remote file from the cloud storage.
         /// </summary>
         /// <param name="fileInfo">The file information representing the remote file to delete.</param>
-        /// <returns>Returns a task to be awaited until delteion is done, true meaning success and false meaning a failure occured.</returns>
+        /// <returns>Returns a task to be awaited until deletion is done, true meaning success and false meaning a failure occured.</returns>
         Task<bool> Delete(CloudStorageFileInfo fileInfo);
+
+        /// <summary>
+        /// Delete multiple remote files from the cloud storage.
+        /// </summary>
+        /// <param name="fileInfo">The file information representing the remote files to delete.</param>
+        /// <returns>Returns a task to be awaited until deletion is done, true meaning success and false meaning a failure occured.</returns>
+        Task<bool> DeleteMany(IEnumerable<CloudStorageFileInfo> fileInfo);
     }
 }

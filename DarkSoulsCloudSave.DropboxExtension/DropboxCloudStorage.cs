@@ -89,7 +89,7 @@ namespace DarkSoulsCloudSave.DropboxExtension
             ListFolderResult list = await dropboxClient.Files.ListFolderAsync(string.Empty);
 
             return list.Entries
-                .Where(e => e.IsFile)
+                .Where(e => e.IsFile && e.IsDeleted == false)
                 .Where(e => string.Equals(Path.GetExtension(e.Name), ".zip", StringComparison.InvariantCultureIgnoreCase))
                 .Select(e => CloudStorageFileInfo.ParseCloudStorageFileInfo(e.Name, e.AsFile.Id))
                 .ToArray();
@@ -137,10 +137,10 @@ namespace DarkSoulsCloudSave.DropboxExtension
         }
 
         /// <summary>
-        /// Delete a remote file on Dropbox.
+        /// Delete a remote file from Dropbox.
         /// </summary>
         /// <param name="fileInfo">The identifier of the remote file to delete.</param>
-        /// <returns>Returns a task to be awaited until delteion is done, true meaning success and false meaning a failure occured.</returns>
+        /// <returns>Returns a task to be awaited until deletion is done, true meaning success and false meaning a failure occured.</returns>
         public async Task<bool> Delete(CloudStorageFileInfo fileInfo)
         {
             if (string.IsNullOrWhiteSpace(fileInfo.LocalFilename))
@@ -149,9 +149,48 @@ namespace DarkSoulsCloudSave.DropboxExtension
             if (dropboxClient == null)
                 throw new InvalidOperationException("Not initialized");
 
-            Metadata result = await dropboxClient.Files.DeleteAsync("/" + fileInfo.LocalFilename);
+            Metadata result;
+
+            try
+            {
+                result = await dropboxClient.Files.DeleteAsync("/" + fileInfo.OriginalRemoteFilename);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
 
             return result?.AsFile?.Id == fileInfo.RemoteFileIdentifier;
+        }
+
+        /// <summary>
+        /// Delete multiple remote files from Dropbox.
+        /// </summary>
+        /// <param name="fileInfo">The file information representing the remote files to delete.</param>
+        /// <returns>Returns a task to be awaited until deletion is done, true meaning success and false meaning a failure occured.</returns>
+        public async Task<bool> DeleteMany(IEnumerable<CloudStorageFileInfo> fileInfo)
+        {
+            if (dropboxClient == null)
+                throw new InvalidOperationException("Not initialized");
+
+            DeleteBatchLaunch result = await dropboxClient.Files.DeleteBatchAsync(fileInfo.Select(x => new DeleteArg("/" + x.OriginalRemoteFilename)));
+
+            int trials = 0;
+
+            while (true)
+            {
+                DeleteBatchJobStatus status = await dropboxClient.Files.DeleteBatchCheckAsync(result.AsAsyncJobId.Value);
+                if (status.IsComplete)
+                    return status.AsComplete.Value.Entries.All(x => x.IsSuccess);
+
+                await Task.Delay(500);
+
+                if (trials++ > 10)
+                    break;
+            }
+
+            return false;
         }
 
         /// <summary>

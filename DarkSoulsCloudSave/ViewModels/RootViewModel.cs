@@ -237,6 +237,11 @@ namespace DarkSoulsCloudSave.ViewModels
             {
                 return Task.FromResult(true);
             }
+
+            public Task<bool> DeleteMany(IEnumerable<CloudStorageFileInfo> fileInfo)
+            {
+                return Task.FromResult(true);
+            }
         }
 
         private Configuration LoadConfiguration()
@@ -421,8 +426,6 @@ namespace DarkSoulsCloudSave.ViewModels
 
                 await SaveDataUtility.BackupLocalSaveData();
 
-                Status = "Retrieving save data list...";
-
                 CloudStorageViewModel restoreSource = CloudStorageViewModels.FirstOrDefault(x => x.IsRestoreSource);
 
                 if (restoreSource == null)
@@ -432,8 +435,9 @@ namespace DarkSoulsCloudSave.ViewModels
                     return;
                 }
 
-                if (await RestoreFromCloudStorage(restoreSource.CloudStorage))
-                    Status = "Restore done";
+                await restoreSource.Restore();
+
+                Status = "Restore done";
             }
             catch (Exception ex)
             {
@@ -443,46 +447,6 @@ namespace DarkSoulsCloudSave.ViewModels
             {
                 IsRestoring = false;
             }
-        }
-
-        private async Task<bool> RestoreFromCloudStorage(ICloudStorage cloudStorage)
-        {
-            IList<IGrouping<DateTime, CloudStorageFileInfo>> fileGroups = GroupArchives(await cloudStorage.ListFiles());
-
-            if (fileGroups.Count == 0)
-            {
-                Status = "No save data";
-                return true;
-            }
-
-            foreach (CloudStorageFileInfo fileInfo in fileGroups[0])
-            {
-                Status = string.Format("Restoring {0}...", Path.GetFileNameWithoutExtension(fileInfo.LocalFilename));
-
-                using (Stream archiveStream = await cloudStorage.Download(fileInfo))
-                    await SaveDataUtility.ExtractSaveDataArchive(archiveStream);
-            }
-
-            if (fileGroups.Count > configuration.RevisionsToKeep)
-            {
-                Status = "Cleaning up...";
-
-                IEnumerable<Task<bool>> deleteTasks = fileGroups
-                    .Skip(configuration.RevisionsToKeep)
-                    .SelectMany(x => x)
-                    .Select(cloudStorage.Delete)
-                    .ToList();
-
-                await Task.WhenAll(deleteTasks);
-
-                if (deleteTasks.Any(x => x.Result) == false)
-                {
-                    Status = "Error: At least one deletion task failed";
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         private async Task RunStoreProcess()
@@ -495,19 +459,18 @@ namespace DarkSoulsCloudSave.ViewModels
             try
             {
                 string timestamp = DateTime.UtcNow.ToString(CloudStorageFileInfo.TimestampFormat);
+                string[] directories = Directory.GetDirectories(SaveDataUtility.SaveDataPath, "*", SearchOption.TopDirectoryOnly);
 
-                foreach (CloudStorageViewModel vm in CloudStorageViewModels.Where(x => x.IsStoreTarget))
+                Task storeFunc(CloudStorageViewModel cloudStorage)
                 {
-                    foreach (string directory in Directory.GetDirectories(SaveDataUtility.SaveDataPath, "*", SearchOption.TopDirectoryOnly))
-                    {
-                        string filename = Path.GetFileName(directory);
+                    return cloudStorage.Store(timestamp, directories, configuration.RevisionsToKeep);
+                };
 
-                        Status = string.Format("Storing {0}...", filename);
-
-                        Stream archiveStream = await SaveDataUtility.GetSaveDataArchive(directory);
-                        await vm.CloudStorage.Upload($"/{timestamp}_{filename}.zip", archiveStream);
-                    }
-                }
+                await Task.WhenAll(
+                    CloudStorageViewModels
+                        .Where(x => x.IsStoreTarget)
+                        .Select(x => storeFunc(x))
+                );
 
                 Status = "Store done";
             }
@@ -519,14 +482,6 @@ namespace DarkSoulsCloudSave.ViewModels
             {
                 IsStoring = false;
             }
-        }
-
-        private IList<IGrouping<DateTime, CloudStorageFileInfo>> GroupArchives(IEnumerable<CloudStorageFileInfo> files)
-        {
-            return files
-                .OrderByDescending(x => x.StoreTimestamp)
-                .GroupBy(x => x.StoreTimestamp)
-                .ToList();
         }
 
         private void ConfigureStorageViewModels(Configuration configuration)
@@ -545,6 +500,14 @@ namespace DarkSoulsCloudSave.ViewModels
 
             foreach (CloudStorageViewModel vm in CloudStorageViewModels)
                 vm.IsRestoreSource = vm.UniqueId == configuration.RestoreCloudStorage;
+        }
+
+        public static IList<IGrouping<DateTime, CloudStorageFileInfo>> GroupArchives(IEnumerable<CloudStorageFileInfo> files)
+        {
+            return files
+                .OrderByDescending(x => x.StoreTimestamp)
+                .GroupBy(x => x.StoreTimestamp)
+                .ToList();
         }
     }
 }

@@ -155,5 +155,15 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
                 driveService = null;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileInfo"></param>
+        /// <returns></returns>
+        public Task<bool> DeleteMany(IEnumerable<CloudStorageFileInfo> fileInfo)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
