@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DarkSoulsCloudSave.DropboxExtension")]
+[assembly: AssemblyTitle("SteamCloudSave.DropboxExtension")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DarkSoulsCloudSave.DropboxExtension")]
-[assembly: AssemblyCopyright("Copyright © TanukiSharp 2016 - 2017")]
+[assembly: AssemblyProduct("SteamCloudSave.DropboxExtension")]
+[assembly: AssemblyCopyright("Copyright © TanukiSharp 2016 - 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

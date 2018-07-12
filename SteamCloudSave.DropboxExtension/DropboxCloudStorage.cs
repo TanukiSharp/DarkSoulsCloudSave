@@ -78,7 +78,7 @@ namespace SteamCloudSave.DropboxExtension
         }
 
         /// <summary>
-        /// Lists the files available in the 'Apps/DarkSoulsCloudStrorage' remote folder on the Dropbox.
+        /// Lists the files available in the Apps remote folder on the Dropbox.
         /// </summary>
         /// <returns>Returns an array of remote filenames.</returns>
         public async Task<IEnumerable<CloudStorageFileInfo>> ListFiles()

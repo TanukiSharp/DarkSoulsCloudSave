@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace SteamCloudSave.Core
 {
     /// <summary>
-    /// Provides helper methods related to Dark Souls 3 save data management.
+    /// Provides helper methods related to game save data management.
     /// </summary>
     public static class SaveDataUtility
     {
