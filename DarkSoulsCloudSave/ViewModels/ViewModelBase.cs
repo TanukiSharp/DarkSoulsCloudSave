@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DarkSoulsCloudSave.ViewModels
+namespace SteamCloudSave.ViewModels
 {
     public abstract class ViewModelBase : INotifyPropertyChanged
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.ComponentModel;
-using DarkSoulsCloudSave.ViewModels;
+using SteamCloudSave.ViewModels;
 
-namespace DarkSoulsCloudSave
+namespace SteamCloudSave
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

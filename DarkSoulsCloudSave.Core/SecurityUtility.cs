@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DarkSoulsCloudSave.Core
+namespace SteamCloudSave.Core
 {
     /// <summary>
     /// Provides helper methods related to security.

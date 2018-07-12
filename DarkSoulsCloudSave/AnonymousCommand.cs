@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace DarkSoulsCloudSave
+namespace SteamCloudSave
 {
     public class AnonymousCommand : AnonymousCommand<object>
     {

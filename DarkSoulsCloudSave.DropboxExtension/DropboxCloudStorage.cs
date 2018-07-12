@@ -1,4 +1,4 @@
-﻿using DarkSoulsCloudSave.Core;
+﻿using SteamCloudSave.Core;
 using Dropbox.Api;
 using Dropbox.Api.Files;
 using System;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Dropbox.Api.Stone;
 
-namespace DarkSoulsCloudSave.DropboxExtension
+namespace SteamCloudSave.DropboxExtension
 {
     /// <summary>
     /// Implementation of cloud storage for the Dropbox platform.

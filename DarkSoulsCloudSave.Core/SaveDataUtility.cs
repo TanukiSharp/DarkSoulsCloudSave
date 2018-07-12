@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DarkSoulsCloudSave.Core
+namespace SteamCloudSave.Core
 {
     /// <summary>
     /// Provides helper methods related to Dark Souls 3 save data management.

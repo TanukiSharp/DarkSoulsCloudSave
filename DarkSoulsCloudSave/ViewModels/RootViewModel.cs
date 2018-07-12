@@ -7,14 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using DarkSoulsCloudSave.DataModels.Configuration.V1;
-using DarkSoulsCloudSave.Core;
+using SteamCloudSave.DataModels.Configuration.V1;
+using SteamCloudSave.Core;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Threading;
 using System.ComponentModel;
 
-namespace DarkSoulsCloudSave.ViewModels
+namespace SteamCloudSave.ViewModels
 {
     public class RootViewModel : ViewModelBase
     {

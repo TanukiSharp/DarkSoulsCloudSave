@@ -84,9 +84,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DarkSoulsCloudSave.Core\DarkSoulsCloudSave.Core.csproj">
+    <ProjectReference Include="..\DarkSoulsCloudSave.Core\SteamCloudSave.Core.csproj">
       <Project>{1b6bb7e7-1de9-46d5-a288-e40efd56dc61}</Project>
-      <Name>DarkSoulsCloudSave.Core</Name>
+      <Name>SteamCloudSave.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

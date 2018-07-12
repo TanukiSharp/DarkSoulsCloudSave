@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DarkSoulsCloudSave.Properties {
+namespace SteamCloudSave.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

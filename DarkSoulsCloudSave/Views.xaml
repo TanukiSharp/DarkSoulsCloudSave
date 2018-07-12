@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:cvt="clr-namespace:DarkSoulsCloudSave.ValueConverter"
-                    xmlns:local="clr-namespace:DarkSoulsCloudSave">
+                    xmlns:cvt="clr-namespace:SteamCloudSave.ValueConverter"
+                    xmlns:local="clr-namespace:SteamCloudSave">
 
     <DataTemplate x:Key="CloudStorageView">
         <StackPanel Orientation="Vertical" Margin="0 0 0 16" ToolTipService.ToolTip="{Binding DetailedStatus, Mode=OneWay}">

@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DarkSoulsCloudSave.Core;
+using SteamCloudSave.Core;
 
-namespace DarkSoulsCloudSave.ViewModels
+namespace SteamCloudSave.ViewModels
 {
     public class CloudStorageViewModel : ViewModelBase
     {

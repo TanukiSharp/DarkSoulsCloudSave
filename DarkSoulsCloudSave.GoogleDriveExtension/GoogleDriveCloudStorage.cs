@@ -1,5 +1,5 @@
 using System;
-using DarkSoulsCloudSave.Core;
+using SteamCloudSave.Core;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 using Google.Apis.Services;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Google.Apis.Upload;
 using Data = Google.Apis.Drive.v3.Data;
 
-namespace DarkSoulsCloudSave.GoogleDriveExtension
+namespace SteamCloudSave.GoogleDriveExtension
 {
     /// <summary>
     /// Implementation of cloud storage for the Google Drive platform. (AppData access variant)

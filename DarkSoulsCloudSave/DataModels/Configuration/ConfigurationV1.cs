@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DarkSoulsCloudSave.DataModels.Configuration.V1
+namespace SteamCloudSave.DataModels.Configuration.V1
 {
     public class Configuration : ConfigurationBase<Configuration>
     {
