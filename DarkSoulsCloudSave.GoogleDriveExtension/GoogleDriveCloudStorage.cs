@@ -1,3 +1,4 @@
+using System;
 using DarkSoulsCloudSave.Core;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
@@ -131,7 +132,7 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
         }
 
         /// <summary>
-        /// Delete a file on Google Drive.
+        /// Deletes a file from Google Drive.
         /// </summary>
         /// <param name="fileInfo">The file information representing the remote file to delete.</param>
         /// <returns>Returns a task to be awaited until delteion is done, true meaning success and false meaning a failure occured.</returns>
@@ -145,6 +146,17 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
         }
 
         /// <summary>
+        /// Deletes multiple remote files from Google Drive.
+        /// </summary>
+        /// <param name="fileInfo">The file information representing the remote files to delete.</param>
+        /// <returns>Returns a task to be awaited until deletion is done, true meaning success and false meaning a failure occured.</returns>
+        public async Task<bool> DeleteMany(IEnumerable<CloudStorageFileInfo> fileInfo)
+        {
+            bool[] results = await Task.WhenAll(fileInfo.Select(Delete));
+            return results.All(x => x);
+        }
+
+        /// <summary>
         /// Disposes the Google Drive library.
         /// </summary>
         public void Dispose()
@@ -154,16 +166,6 @@ namespace DarkSoulsCloudSave.GoogleDriveExtension
                 driveService.Dispose();
                 driveService = null;
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="fileInfo"></param>
-        /// <returns></returns>
-        public Task<bool> DeleteMany(IEnumerable<CloudStorageFileInfo> fileInfo)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

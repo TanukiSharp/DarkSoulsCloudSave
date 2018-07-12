@@ -203,19 +203,6 @@ namespace DarkSoulsCloudSave.ViewModels
                     .SelectMany(x => x);
 
                 return await CloudStorage.DeleteMany(files);
-
-                //IEnumerable<Task<bool>> deleteTasks = fileGroups
-                //    .Skip(revisionsToKeep)
-                //    .SelectMany(x => x)
-                //    .Select(CloudStorage.Delete);
-
-                //await Task.WhenAll(deleteTasks);
-
-                //foreach (var t in deleteTasks)
-                //{
-                //    if ((await t) == false)
-                //        return false;
-                //}
             }
 
             return true;

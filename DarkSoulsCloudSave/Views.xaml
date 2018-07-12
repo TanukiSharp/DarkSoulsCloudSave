@@ -5,12 +5,10 @@
 
     <DataTemplate x:Key="CloudStorageView">
         <StackPanel Orientation="Vertical" Margin="0 0 0 16" ToolTipService.ToolTip="{Binding DetailedStatus, Mode=OneWay}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Name, Mode=OneTime}" FontWeight="Bold" VerticalAlignment="Center"/>
-                <TextBlock Text="{Binding Status, Mode=OneWay}" FontStyle="Italic" Margin="6 0 0 0" VerticalAlignment="Center"/>
-            </StackPanel>
-            <CheckBox IsChecked="{Binding IsStoreTarget}" Content="Store target" Margin="1" IsThreeState="False"/>
-            <RadioButton GroupName="A" IsChecked="{Binding IsRestoreSource}" Content="Restore source" Margin="1" IsThreeState="False"/>
+            <TextBlock Text="{Binding Name, Mode=OneTime}" FontWeight="Bold" Margin="2" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding Status, Mode=OneWay}" Width="150" FontStyle="Italic" Margin="2" VerticalAlignment="Center" ToolTipService.ToolTip="{Binding Status, Mode=OneWay}"/>
+            <CheckBox IsChecked="{Binding IsStoreTarget}" Content="Store target" Margin="2" IsThreeState="False"/>
+            <RadioButton GroupName="A" IsChecked="{Binding IsRestoreSource}" Content="Restore source" Margin="2" IsThreeState="False"/>
         </StackPanel>
     </DataTemplate>
 
@@ -28,7 +26,7 @@
                         </TextBlock.LayoutTransform>
                     </TextBlock>
                 </Expander.Header>
-                
+
                 <ItemsControl ItemsSource="{Binding CloudStorageViewModels, Mode=OneTime}" ItemTemplate="{StaticResource CloudStorageView}">
                 </ItemsControl>
             </Expander>
