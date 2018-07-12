@@ -7,8 +7,8 @@
     <ProjectGuid>{027556AE-1D6C-4754-B7AB-15258814855C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DarkSoulsCloudSave</RootNamespace>
-    <AssemblyName>DarkSoulsCloudSave</AssemblyName>
+    <RootNamespace>SteamCloudSave</RootNamespace>
+    <AssemblyName>SteamCloudSave</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

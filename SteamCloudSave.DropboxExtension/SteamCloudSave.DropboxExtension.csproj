@@ -7,8 +7,8 @@
     <ProjectGuid>{D22444BE-B794-40F4-80D5-F716F7AFCC67}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DarkSoulsCloudSave.DropboxExtension</RootNamespace>
-    <AssemblyName>DarkSoulsCloudSave.DropboxExtension</AssemblyName>
+    <RootNamespace>SteamCloudSave.DropboxExtension</RootNamespace>
+    <AssemblyName>SteamCloudSave.DropboxExtension</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -22,7 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\DarkSoulsCloudSave.DropboxExtension.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\SteamCloudSave.DropboxExtension.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,7 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Release\DarkSoulsCloudSave.DropboxExtension.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\SteamCloudSave.DropboxExtension.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dropbox.Api, Version=4.0.0.0, Culture=neutral, PublicKeyToken=310f0e82fbb45d01, processorArchitecture=MSIL">
@@ -68,7 +68,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

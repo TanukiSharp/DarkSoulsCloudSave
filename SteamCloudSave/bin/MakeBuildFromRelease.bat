@@ -2,7 +2,7 @@
 
 set SOURCE=Release
 set BUILD=Build
-set TARGET=%BUILD%\DarkSoulsCloudSave
+set TARGET=%BUILD%\SteamCloudSave
 
 rmdir /S /Q %BUILD%
 mkdir %TARGET%
