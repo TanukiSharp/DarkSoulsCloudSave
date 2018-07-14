@@ -20,13 +20,24 @@ namespace SteamCloudSave.DropboxExtension
     {
         private DropboxClient dropboxClient;
 
-        private const string AppKey = "cwoecqgt2xtma0l";
-        private const string AppSecret = "2a3si3j0kvgrush"; // <- not that secret in that case
+        private readonly string appKey;
+        private readonly string appSecret;
 
         /// <summary>
         /// Gets the display name of the current <see cref="ICloudStorage"/> instance.
         /// </summary>
         public string Name => "Dropbox";
+
+        /// <summary>
+        /// Initializes the <see cref="DropboxCloudStorage"/> instance.
+        /// </summary>
+        /// <param name="appKey">The Dropbox application key.</param>
+        /// <param name="appSecret">The Dropbox application secret.</param>
+        public DropboxCloudStorage(string appKey, string appSecret)
+        {
+            this.appKey = appKey;
+            this.appSecret = appSecret;
+        }
 
         /// <summary>
         /// Initializes the Dropbox library, and ignites the authorization process if needed.
@@ -43,7 +54,7 @@ namespace SteamCloudSave.DropboxExtension
 
             if (string.IsNullOrWhiteSpace(accessToken))
             {
-                Uri authorizeUri = DropboxOAuth2Helper.GetAuthorizeUri(AppKey, false);
+                Uri authorizeUri = DropboxOAuth2Helper.GetAuthorizeUri(appKey, false);
                 string url = authorizeUri.ToString();
 
                 MessageBox.Show("After you click the OK button on this dialog, a web page asking you to allow the application will open, and then another one containing a code.\r\n\r\nOnce you see the code, please copy it to the clipboard by selecting it and pressing Ctrl+C, or right click and 'Copy' menu.", "Authorization", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -58,11 +69,11 @@ namespace SteamCloudSave.DropboxExtension
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("An error occured:\r\n" + ex.Message, "Authorization Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("An error occured:\r\n" + ex.Message, "Authorization failed", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
-                OAuth2Response response = await DropboxOAuth2Helper.ProcessCodeFlowAsync(code, AppKey, AppSecret);
+                OAuth2Response response = await DropboxOAuth2Helper.ProcessCodeFlowAsync(code, appKey, appSecret);
 
                 accessToken = response.AccessToken;
 

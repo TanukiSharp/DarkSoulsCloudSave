@@ -21,8 +21,17 @@ namespace SteamCloudSave.ViewModels
         private readonly IList<ICloudStorage> availableCloudStorages = new List<ICloudStorage>
         {
             //new NullCloudStorage(),
-            new DropboxExtension.DropboxCloudStorage(),
-            new GoogleDriveExtension.GoogleDriveCloudStorage()
+
+            new DropboxExtension.DropboxCloudStorage(
+                DropboxConstants.AppKey,
+                DropboxConstants.AppSecret
+            ),
+
+            new GoogleDriveExtension.GoogleDriveCloudStorage(
+                GoogleDriveConstants.ApplicationName,
+                GoogleDriveConstants.ClientId,
+                GoogleDriveConstants.ClientSecret
+            ),
         };
 
         public IList<CloudStorageViewModel> CloudStorageViewModels { get; }
@@ -117,7 +126,8 @@ namespace SteamCloudSave.ViewModels
             isInitializing = true;
 
             configuration = LoadConfiguration();
-            SaveDataUtility = new SaveDataUtility("%APPDATA%/DarkSoulsIII", ArchiveMode.SubFolders);
+
+            SaveDataUtility = new SaveDataUtility(Constants.SaveDataPath, Constants.GameArchiveMode);
 
             ConfigureStorageViewModels(configuration);
 
@@ -368,7 +378,7 @@ namespace SteamCloudSave.ViewModels
                         dispatcher.Invoke(() =>
                         {
                             IsRunGameLocked = true;
-                            Status = "Dark Souls 3 is running...";
+                            Status = $"{Constants.GameDisplayName} is running...";
                             GameStarted?.Invoke(this, EventArgs.Empty);
                         });
                     }
@@ -377,7 +387,7 @@ namespace SteamCloudSave.ViewModels
                         dispatcher.Invoke(() =>
                         {
                             IsRunGameLocked = false;
-                            Status = "Dark Souls 3 has stopped...";
+                            Status = $"{Constants.GameDisplayName} has stopped...";
                             GameStopped?.Invoke(this, EventArgs.Empty);
                         });
                     }
@@ -402,7 +412,7 @@ namespace SteamCloudSave.ViewModels
 
             try
             {
-                Process.Start(Constants.SteamUrl);
+                Process.Start(Constants.GameSteamUrl);
                 await tcs.Task;
             }
             catch (Exception ex)

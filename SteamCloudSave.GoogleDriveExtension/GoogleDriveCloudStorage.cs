@@ -20,10 +20,10 @@ namespace SteamCloudSave.GoogleDriveExtension
     public class GoogleDriveCloudStorage : ICloudStorage
     {
         private static readonly string[] Scopes = { DriveService.Scope.DriveAppdata };
-        private static readonly string ApplicationName = "DarkSoulsCloudSave";
+        private readonly string applicationName;
 
-        private const string ClientId = "483903211848-lll6sv6teesjlvrnu2faobrgvse17h5e.apps.googleusercontent.com";
-        private const string ClientSecret = "2qatYztspPDByeq4rh7KBi_I";
+        private readonly string clientId;
+        private readonly string clientSecret;
 
         private DriveService driveService;
 
@@ -31,6 +31,19 @@ namespace SteamCloudSave.GoogleDriveExtension
         /// Gets the display name of the current <see cref="ICloudStorage"/> instance.
         /// </summary>
         public string Name => "Google Drive";
+
+        /// <summary>
+        /// Initializes the <see cref="GoogleDriveCloudStorage"/> instance.
+        /// </summary>
+        /// <param name="applicationName">The Google Drive application name.</param>
+        /// <param name="clientId">The Google Drive application client identifier.</param>
+        /// <param name="clientSecret">The Google Drive application client secret.</param>
+        public GoogleDriveCloudStorage(string applicationName, string clientId, string clientSecret)
+        {
+            this.applicationName = applicationName;
+            this.clientId = clientId;
+            this.clientSecret = clientSecret;
+        }
 
         /// <summary>
         /// Initializes the Google Drive library, and ignites the authorization process if needed.
@@ -44,8 +57,8 @@ namespace SteamCloudSave.GoogleDriveExtension
             UserCredential credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                 new ClientSecrets
                 {
-                    ClientId = ClientId,
-                    ClientSecret = ClientSecret,
+                    ClientId = clientId,
+                    ClientSecret = clientSecret,
                 },
                 Scopes,
                 "user",
@@ -55,7 +68,7 @@ namespace SteamCloudSave.GoogleDriveExtension
             driveService = new DriveService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = credential,
-                ApplicationName = ApplicationName,
+                ApplicationName = applicationName,
             });
         }
 
