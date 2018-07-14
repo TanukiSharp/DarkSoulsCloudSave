@@ -153,7 +153,7 @@ namespace SteamCloudSave.DropboxExtension
 
             try
             {
-                result = await dropboxClient.Files.DeleteAsync("/" + fileInfo.OriginalRemoteFilename);
+                result = await dropboxClient.Files.DeleteAsync("/" + fileInfo.LocalFilename);
             }
             catch (Exception ex)
             {
@@ -174,7 +174,7 @@ namespace SteamCloudSave.DropboxExtension
             if (dropboxClient == null)
                 throw new InvalidOperationException("Not initialized");
 
-            DeleteBatchLaunch result = await dropboxClient.Files.DeleteBatchAsync(fileInfo.Select(x => new DeleteArg("/" + x.OriginalRemoteFilename)));
+            DeleteBatchLaunch result = await dropboxClient.Files.DeleteBatchAsync(fileInfo.Select(x => new DeleteArg("/" + x.LocalFilename)));
 
             int trials = 0;
 

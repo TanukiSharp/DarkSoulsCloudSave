@@ -34,32 +34,28 @@ namespace SteamCloudSave.Core
         public string RemoteFileIdentifier { get; }
 
         /// <summary>
-        /// Gets an original remote file name (timestamped local filename).
-        /// </summary>
-        public string OriginalRemoteFilename { get; }
-
-        /// <summary>
         /// Initializes a <see cref="CloudStorageFileInfo"/> instance.
         /// </summary>
         /// <param name="localFilename">The name of the file stored, or to be stored, on the local machine.</param>
         /// <param name="remoteFileIdentifier">The identifier that uniquely represent a file on the remote cloud.</param>
-        /// 
+        /// <returns>Returns a <see cref="CloudStorageFileInfo"/> instance.</returns>
         public static CloudStorageFileInfo ParseCloudStorageFileInfo(string localFilename, string remoteFileIdentifier)
         {
-            if (localFilename.Length > TimestampFormat.Length + 1 && localFilename[TimestampFormat.Length] == '_')
+            string localFilenameWithoutExtension = Path.GetFileNameWithoutExtension(localFilename);
+
+            if (localFilenameWithoutExtension.Length == TimestampFormat.Length)
             {
-                if (DateTime.TryParseExact(localFilename.Substring(0, TimestampFormat.Length), TimestampFormat, null, DateTimeStyles.None, out DateTime dt))
-                    return new CloudStorageFileInfo(dt, localFilename.Substring(TimestampFormat.Length + 1), localFilename, remoteFileIdentifier);
+                if (DateTime.TryParseExact(localFilenameWithoutExtension, TimestampFormat, null, DateTimeStyles.None, out DateTime dt))
+                    return new CloudStorageFileInfo(dt, localFilename, remoteFileIdentifier);
             }
 
-            return new CloudStorageFileInfo(DateTime.MinValue, localFilename, localFilename, remoteFileIdentifier);
+            return new CloudStorageFileInfo(DateTime.MinValue, localFilename, remoteFileIdentifier);
         }
 
-        private CloudStorageFileInfo(DateTime storeTimestamp, string localFilename, string originalRemoteFilename, string remoteFileIdentifier)
+        private CloudStorageFileInfo(DateTime storeTimestamp, string localFilename, string remoteFileIdentifier)
         {
             StoreTimestamp = storeTimestamp;
             LocalFilename = localFilename;
-            OriginalRemoteFilename = originalRemoteFilename;
             RemoteFileIdentifier = remoteFileIdentifier;
         }
 

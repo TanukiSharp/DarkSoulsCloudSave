@@ -126,21 +126,20 @@ namespace SteamCloudSave.ViewModels
         {
             Status = "Retrieving save data list...";
 
-            IList<IGrouping<DateTime, CloudStorageFileInfo>> fileGroups = RootViewModel.GroupArchives(await CloudStorage.ListFiles());
+            IList<CloudStorageFileInfo> files = RootViewModel.SortFiles(await CloudStorage.ListFiles());
 
-            if (fileGroups.Count == 0)
+            if (files.Count == 0)
             {
                 Status = "No save data";
                 return;
             }
 
-            foreach (CloudStorageFileInfo fileInfo in fileGroups[0])
-            {
-                Status = string.Format("Restoring {0}...", Path.GetFileNameWithoutExtension(fileInfo.LocalFilename));
+            CloudStorageFileInfo fileInfo = files[0];
 
-                using (Stream archiveStream = await CloudStorage.Download(fileInfo))
-                    await SaveDataUtility.ExtractSaveDataArchive(archiveStream);
-            }
+            Status = string.Format("Restoring {0}...", Path.GetFileNameWithoutExtension(fileInfo.LocalFilename));
+
+            using (Stream archiveStream = await CloudStorage.Download(fileInfo))
+                await parent.SaveDataUtility.ExtractSaveDataArchive(archiveStream);
 
             Status = "Restore done";
         }
@@ -172,17 +171,8 @@ namespace SteamCloudSave.ViewModels
         {
             Status = string.Format("Storing...");
 
-            IList<Task> storeTasks = new List<Task>();
-
-            foreach (string directory in directories)
-            {
-                string filename = Path.GetFileName(directory);
-
-                Stream archiveStream = await SaveDataUtility.GetSaveDataArchive(directory);
-                storeTasks.Add(CloudStorage.Upload($"/{timestamp}_{filename}.zip", archiveStream));
-            }
-
-            await Task.WhenAll(storeTasks);
+            Stream archiveStream = await parent.SaveDataUtility.GetSaveDataArchive();
+            await CloudStorage.Upload($"/{timestamp}.zip", archiveStream);
 
             Status = "Cleaning up...";
 
@@ -194,15 +184,13 @@ namespace SteamCloudSave.ViewModels
 
         private async Task<bool> CleanupOldRemoteSaves(int revisionsToKeep)
         {
-            IList<IGrouping<DateTime, CloudStorageFileInfo>> fileGroups = RootViewModel.GroupArchives(await CloudStorage.ListFiles());
+            IList<CloudStorageFileInfo> files = RootViewModel.SortFiles(await CloudStorage.ListFiles());
 
-            if (fileGroups.Count > revisionsToKeep)
+            if (files.Count > revisionsToKeep)
             {
-                IEnumerable<CloudStorageFileInfo> files = fileGroups
-                    .Skip(revisionsToKeep)
-                    .SelectMany(x => x);
+                IEnumerable<CloudStorageFileInfo> toDeleteFiles = files.Skip(revisionsToKeep);
 
-                return await CloudStorage.DeleteMany(files);
+                return await CloudStorage.DeleteMany(toDeleteFiles);
             }
 
             return true;

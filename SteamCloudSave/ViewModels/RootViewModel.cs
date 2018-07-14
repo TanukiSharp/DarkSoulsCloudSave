@@ -91,6 +91,8 @@ namespace SteamCloudSave.ViewModels
 
         private Configuration configuration;
 
+        public SaveDataUtility SaveDataUtility { get; private set; }
+
         public RootViewModel()
         {
             RestoreCommand = new AnonymousCommand(OnRestore);
@@ -115,6 +117,7 @@ namespace SteamCloudSave.ViewModels
             isInitializing = true;
 
             configuration = LoadConfiguration();
+            SaveDataUtility = new SaveDataUtility("%APPDATA%/DarkSoulsIII", ArchiveMode.SubFolders);
 
             ConfigureStorageViewModels(configuration);
 
@@ -502,11 +505,10 @@ namespace SteamCloudSave.ViewModels
                 vm.IsRestoreSource = vm.UniqueId == configuration.RestoreCloudStorage;
         }
 
-        public static IList<IGrouping<DateTime, CloudStorageFileInfo>> GroupArchives(IEnumerable<CloudStorageFileInfo> files)
+        public static IList<CloudStorageFileInfo> SortFiles(IEnumerable<CloudStorageFileInfo> files)
         {
             return files
                 .OrderByDescending(x => x.StoreTimestamp)
-                .GroupBy(x => x.StoreTimestamp)
                 .ToList();
         }
     }
