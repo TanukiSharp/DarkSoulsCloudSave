@@ -23,6 +23,7 @@ namespace SteamCloudSave.ViewModels
             //new NullCloudStorage(),
 
             new DropboxExtension.DropboxCloudStorage(
+                "DS3",
                 DropboxConstants.AppKey,
                 DropboxConstants.AppSecret
             ),

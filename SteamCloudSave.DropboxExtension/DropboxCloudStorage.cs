@@ -23,6 +23,8 @@ namespace SteamCloudSave.DropboxExtension
         private readonly string appKey;
         private readonly string appSecret;
 
+        private readonly string remoteFolder;
+
         /// <summary>
         /// Gets the display name of the current <see cref="ICloudStorage"/> instance.
         /// </summary>
@@ -31,10 +33,12 @@ namespace SteamCloudSave.DropboxExtension
         /// <summary>
         /// Initializes the <see cref="DropboxCloudStorage"/> instance.
         /// </summary>
+        /// <param name="remoteFolder">The folder where to store saves in the remote cloud storage.</param>
         /// <param name="appKey">The Dropbox application key.</param>
         /// <param name="appSecret">The Dropbox application secret.</param>
-        public DropboxCloudStorage(string appKey, string appSecret)
+        public DropboxCloudStorage(string remoteFolder, string appKey, string appSecret)
         {
+            this.remoteFolder = remoteFolder;
             this.appKey = appKey;
             this.appSecret = appSecret;
         }
@@ -86,6 +90,19 @@ namespace SteamCloudSave.DropboxExtension
             }
 
             dropboxClient = new DropboxClient(accessToken);
+
+            try
+            {
+                await dropboxClient.Files.CreateFolderAsync($"/{remoteFolder}");
+            }
+            catch (ApiException<CreateFolderError> ex) when (ex.ErrorResponse.IsPath && ex.ErrorResponse.AsPath.Value.IsConflict)
+            {
+                // Swallow this exception because folder already exist, everything is fine.
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         /// <summary>
@@ -97,7 +114,7 @@ namespace SteamCloudSave.DropboxExtension
             if (dropboxClient == null)
                 throw new InvalidOperationException("Not initialized");
 
-            ListFolderResult list = await dropboxClient.Files.ListFolderAsync(string.Empty);
+            ListFolderResult list = await dropboxClient.Files.ListFolderAsync($"/{remoteFolder}/");
 
             return list.Entries
                 .Where(e => e.IsFile && e.IsDeleted == false)
@@ -119,7 +136,7 @@ namespace SteamCloudSave.DropboxExtension
             if (dropboxClient == null)
                 throw new InvalidOperationException("Not initialized");
 
-            IDownloadResponse<FileMetadata> response = await dropboxClient.Files.DownloadAsync(fileInfo.RemoteFileIdentifier);
+            IDownloadResponse<FileMetadata> response = await dropboxClient.Files.DownloadAsync($"/{remoteFolder}/{fileInfo.RemoteFileIdentifier}");
             return await response.GetContentAsStreamAsync();
         }
 
@@ -140,7 +157,7 @@ namespace SteamCloudSave.DropboxExtension
             if (dropboxClient == null)
                 throw new InvalidOperationException("Not initialized");
 
-            var commitInfo = new CommitInfo(localFilename, WriteMode.Overwrite.Instance, false, null, true);
+            var commitInfo = new CommitInfo($"/{remoteFolder}/{localFilename}", WriteMode.Overwrite.Instance, false, null, true);
 
             FileMetadata result = await dropboxClient.Files.UploadAsync(commitInfo, stream);
 
@@ -164,7 +181,7 @@ namespace SteamCloudSave.DropboxExtension
 
             try
             {
-                result = await dropboxClient.Files.DeleteAsync("/" + fileInfo.LocalFilename);
+                result = await dropboxClient.Files.DeleteAsync($"/{remoteFolder}/{fileInfo.LocalFilename}");
             }
             catch (Exception ex)
             {
@@ -185,7 +202,7 @@ namespace SteamCloudSave.DropboxExtension
             if (dropboxClient == null)
                 throw new InvalidOperationException("Not initialized");
 
-            DeleteBatchLaunch result = await dropboxClient.Files.DeleteBatchAsync(fileInfo.Select(x => new DeleteArg("/" + x.LocalFilename)));
+            DeleteBatchLaunch result = await dropboxClient.Files.DeleteBatchAsync(fileInfo.Select(x => new DeleteArg($"/{remoteFolder}/{x.LocalFilename}")));
 
             int trials = 0;
 
