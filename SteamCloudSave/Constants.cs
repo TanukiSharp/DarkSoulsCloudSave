@@ -9,7 +9,7 @@ namespace SteamCloudSave
 {
     public static class Constants
     {
-        public const string GameDisplayName = "Dark Souls 3";
+        public const string GameDisplayName = "Monster Hunter World";
         public const string GameSteamUrl = "steam://rungameid/374320";
         public const string ProcessName = "DarkSoulsIII";
         public const string SaveDataPath = "%APPDATA%/DarkSoulsIII";
@@ -25,7 +25,7 @@ namespace SteamCloudSave
 
     public static class DropboxConstants
     {
-        public const string AppKey = "cwoecqgt2xtma0l";
-        public const string AppSecret = "2a3si3j0kvgrush";
+        public const string AppKey = "9rvmwx8llat942t";
+        public const string AppSecret = "be3ilql1pdsnylk";
     }
 }
