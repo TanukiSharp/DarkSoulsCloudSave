@@ -37,7 +37,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>DropboxIcon2_64x.ico</ApplicationIcon>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -113,12 +113,6 @@
     <Resource Include="Resources\Upload.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Game.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="DropboxIcon2_64x.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\SteamCloudSave.Core\SteamCloudSave.Core.csproj">
       <Project>{1b6bb7e7-1de9-46d5-a288-e40efd56dc61}</Project>
       <Name>SteamCloudSave.Core</Name>
@@ -131,6 +125,12 @@
       <Project>{8e5832c8-f77d-48f5-8c1f-1545c4adb3e7}</Project>
       <Name>SteamCloudSave.GoogleDriveExtension</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Game.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

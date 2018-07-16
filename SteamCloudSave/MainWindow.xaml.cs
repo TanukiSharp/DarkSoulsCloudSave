@@ -2,6 +2,7 @@
 using System.Windows;
 using System.ComponentModel;
 using SteamCloudSave.ViewModels;
+using System.Reflection;
 
 namespace SteamCloudSave
 {
@@ -15,6 +16,10 @@ namespace SteamCloudSave
         public MainWindow()
         {
             InitializeComponent();
+
+            Version v = Assembly.GetEntryAssembly().GetName().Version;
+            Title = $"{Constants.GameDisplayName} - Steam Cloud Save - v{v.Major}.{v.Minor}.{v.Build}";
+
             DataContext = rootViewModel;
 
             if (IsLoaded)

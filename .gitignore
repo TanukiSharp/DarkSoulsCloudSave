@@ -12,3 +12,5 @@ SteamCloudSave.GoogleDriveExtension/bin/
 SteamCloudSave.GoogleDriveExtension/obj/
 SteamCloudSave.OneDriveExtension/bin/
 SteamCloudSave.OneDriveExtension/obj/
+
+*.csproj.user
