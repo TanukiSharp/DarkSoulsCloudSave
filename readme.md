@@ -4,13 +4,13 @@ There is a `Builds` directory that contains binaries ready to be executed, for t
 
 # Overview
 
-DarkSoulsCloudSave is a software that helps you store and restore your Dark Souls 3 save data to and from the cloud.
+SteamCloudSave is a software that helps you store and restore your Steam game save data to the cloud.
 
-It also allows you to easily restore save data from the cloud, and so by definition can be used as a "Cloud Save" feature that is missing to the Steam version of the game.
+It also allows you to easily restore save data from the cloud, and so by definition can be used as the "Cloud Save" feature that is missing to the Steam version of some games.
 
-For now it uses Dropbox as cloud storage, so you will need a Dropbox account to use it. (creating a Dropbox account is free)
+For now, Dropbox and Google Drive can be used as cloud storages, so you will need a Dropbox account and/or a Google account to use it. (creating those accounts is free)
 
-This software has been written with extensibility in mind, so in the future it **could** be possible to switch to another cloud storage service. *(now experimenting Google Drive cloud storage)*
+This software has been written with extensibility in mind, so in the future it **could** be possible to add other cloud storage services. *(now experimenting Microsoft OneDrive cloud storage)*
 
 ![DarkSoulsCloudSave Application](Images/readme/main_window.png "DarkSoulsCloudSave Application")
 
@@ -25,14 +25,14 @@ The software is provided "as is", therefore, the authors and contributors cannot
 # Requirements
 
 This software requires:
-* .NET Framework 4.5
-* A Dropbox account
+* .NET Framework 4.7.2
+* A Dropbox and/or a Google account
 
-.NET Frameworks 4.5 is preinstalled on Windows 8 and higher. It can be installed separately on Vista SP2 and higher.
+.NET Frameworks 4.7.2 is preinstalled on Windows 10 Fall Creators Update and higher. It can be installed separately on Windows 7 and higher.
 
-Windows XP and Vista SP1 are not supported.
+Windows XP and Vista are not supported.
 
-https://msdn.microsoft.com/en-us/library/8z6watww(v=vs.110).aspx
+https://support.microsoft.com/en-us/help/4054530/microsoft-net-framework-4-7-2-offline-installer-for-windows
 
 Put the application on your disk where it has read and write access.
 For example, avoid using `Program Files` folder.
@@ -46,12 +46,12 @@ The first dialog box tells you that a web page to Dropbox will open, asking you 
 
 ![Authorization](Images/readme/authorization1.png "Authorization")
 
-Once you click the `OK` button, your favorite web browser will open a page from Dropbox.
+Once you click the `OK` button, your favourite web browser will open a page from Dropbox.
 
 ![Authorization](Images/readme/authorization2.png "Authorization")
 
 Before proceeding, please **make sure** this is indeed a page from Dropbox.
-You should see the Dropbox Inc highlithed in green beside the dropbox.com address. (feel free to check the certificate in doubt)
+You should see the Dropbox Inc highlighted in green beside the dropbox.com address. (feel free to check the certificate in doubt)
 
 If the page is not secure or if it is not from Dropbox, **do not** click the `Allow` button, just click `Cancel` and leave the page.
 
@@ -130,7 +130,7 @@ Note: considering you ran the game by clicking the `Run Game` button and the `Au
 
 ## Restore
 
-Cilcking the `Restore` button downloads your save data from the cloud and store it on your local machine, overwriting the previous local save data.
+Clicking the `Restore` button downloads your save data from the cloud and store it on your local machine, overwriting the previous local save data.
 
 Please do understand that this is the way things could be messed up.
 
@@ -178,7 +178,7 @@ When you will build, dependencies should be automatically resolved by Visual Stu
 
 The way builds are made is, compile in `Release` configuration, then run the script `DarkSoulsCloudSave\bin\MakeBuildFromRelease.bat`.
 
-This creates a `Build\DarkSoulsCloudSave` folder and copies only the necessary files from the `Release` folder. Becareful since this totally erase a previously existing `Build` folder and its content, if any.
+This creates a `Build\DarkSoulsCloudSave` folder and copies only the necessary files from the `Release` folder. Be careful since this totally erase a previously existing `Build` folder and its content, if any.
 
 # For developers
 
@@ -197,7 +197,7 @@ http://www.wtfpl.net/
 
 I'm now experimenting a Google Drive based cloud storage implementation, but there are a few issues for the moment.
 
-Despite technical difficulties, there are some limitations in the product that makes me feel unconfortable for the moment, as stated on the following page, section `What is the Application Data folder?`.
+Despite technical difficulties, there are some limitations in the product that makes me feel uncomfortable for the moment, as stated on the following page, section `What is the Application Data folder?`.
 https://developers.google.com/drive/v3/web/appdata
 
 This document is intended to developers, so as an end-user, when you read it, replace `your application` by `DarkSoulsCloudSave` and `the user` by `you`.
