@@ -18,9 +18,9 @@ namespace SteamCloudSave
 
     public static class GoogleDriveConstants
     {
-        public const string ApplicationName = "DarkSoulsCloudSave";
-        public const string ClientId = "483903211848-lll6sv6teesjlvrnu2faobrgvse17h5e.apps.googleusercontent.com";
-        public const string ClientSecret = "2qatYztspPDByeq4rh7KBi_I";
+        public const string ApplicationName = "DS3CloudSave";
+        public const string ClientId = "707047029934-hvm9ai6s0t0bp75r8okgu5a53dq9emvq.apps.googleusercontent.com";
+        public const string ClientSecret = "KQzJTLDsLftZZO2k5xdzuy8Z";
     }
 
     public static class DropboxConstants

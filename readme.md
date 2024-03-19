@@ -1,4 +1,4 @@
-# Download [<img src="https://img.shields.io/badge/download-1.0.6-blue.svg" target="_blank">](https://github.com/TanukiSharp/DarkSoulsCloudSave/raw/master/Builds/DarkSoulsCloudSave_1.0.6.zip)
+# Download [<img src="https://img.shields.io/badge/download-1.0.7-blue.svg" target="_blank">](https://github.com/TanukiSharp/DarkSoulsCloudSave/raw/master/Builds/DarkSoulsCloudSave_1.0.7.zip)
 
 There is a `Builds` directory that contains binaries ready to be executed, for the ones not familiar with technical aspects.
 
@@ -84,9 +84,19 @@ Note: This procedure has to be done only once, but it has to be done on each mac
 # Authorization with Google Drive
 
 When you run the application for the first time, it needs to be authorized to access your Google Drive account.
-Hereafter is the procedure.
 
-*UNDERWAY*
+Once the authorization process starts, a browser should open, asking you to choose the Google account you want to use to store your DS3 saves.
+Then, allow the application to access storage.
+
+Note that this will only grant access to a separate store only accessible by this application, and this application will never be able to access anything else in your Google Drive.
+
+Once allow, you should see a message such as:
+
+```
+Received verification code. You may now close this window.
+```
+
+At that moment, you can close that browser's tab and the application is ready to use.
 
 Note: This procedure has to be done only once, but it has to be done on each machine you want to use the application.
 
@@ -167,7 +177,7 @@ The application remembers the `Auto-store` and `Auto-restore` states. This is sa
 
 This application has been written in C# using WPF. (Windows Presentation Foundation)
 
-To build it yourself, you will need Visual Studio 2015 Community Edition. (available for free)
+To build it yourself, you will need Visual Studio 2015 Community Edition or higher. (available for free)
 
 Open the `DarkSoulsCloudSave.sln` file with Visual Studio, then build the application. (menu Build / Build Solution)
 
