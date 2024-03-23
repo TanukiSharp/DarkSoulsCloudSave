@@ -1,30 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace SteamCloudSave.ValueConverter
+namespace SteamCloudSave.ValueConverter;
+
+public class InverseBooleanValueConverter : IValueConverter
 {
-    public class InverseBooleanValueConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return Inverse(value);
-        }
+        return Inverse(value);
+    }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return Inverse(value);
-        }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return Inverse(value);
+    }
 
-        private bool Inverse(object value)
-        {
-            if (value is bool)
-                return !((bool)value);
-            return value == null;
-        }
+    private static bool Inverse(object value)
+    {
+        if (value is bool boolValue)
+            return !boolValue;
+
+        return value is null;
     }
 }

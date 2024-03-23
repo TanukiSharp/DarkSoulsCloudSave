@@ -1,15 +1,15 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamCloudSave", "SteamCloudSave\SteamCloudSave.csproj", "{027556AE-1D6C-4754-B7AB-15258814855C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamCloudSave", "SteamCloudSave\SteamCloudSave.csproj", "{027556AE-1D6C-4754-B7AB-15258814855C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamCloudSave.Core", "SteamCloudSave.Core\SteamCloudSave.Core.csproj", "{1B6BB7E7-1DE9-46D5-A288-E40EFD56DC61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamCloudSave.Core", "SteamCloudSave.Core\SteamCloudSave.Core.csproj", "{1B6BB7E7-1DE9-46D5-A288-E40EFD56DC61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamCloudSave.GoogleDriveExtension", "SteamCloudSave.GoogleDriveExtension\SteamCloudSave.GoogleDriveExtension.csproj", "{8E5832C8-F77D-48F5-8C1F-1545C4ADB3E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamCloudSave.GoogleDriveExtension", "SteamCloudSave.GoogleDriveExtension\SteamCloudSave.GoogleDriveExtension.csproj", "{8E5832C8-F77D-48F5-8C1F-1545C4ADB3E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamCloudSave.DropboxExtension", "SteamCloudSave.DropboxExtension\SteamCloudSave.DropboxExtension.csproj", "{D22444BE-B794-40F4-80D5-F716F7AFCC67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamCloudSave.DropboxExtension", "SteamCloudSave.DropboxExtension\SteamCloudSave.DropboxExtension.csproj", "{D22444BE-B794-40F4-80D5-F716F7AFCC67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

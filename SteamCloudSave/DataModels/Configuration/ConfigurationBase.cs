@@ -1,37 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Xml.Serialization;
 
-namespace SteamCloudSave.DataModels
+namespace SteamCloudSave.DataModels;
+
+public abstract class ConfigurationBase<T> where T : ConfigurationBase<T>
 {
-    public abstract class ConfigurationBase<T> where T : ConfigurationBase<T>
+    [XmlIgnore]
+    public string SettingsFilePath { get; private set; }
+
+    public void Save(string filename)
     {
-        [XmlIgnore]
-        public string SettingsFilePath { get; private set; }
+        XmlSerializer serializer = new(typeof(T));
 
-        public void Save(string filename)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            using (var fs = new FileStream(filename, FileMode.Create, FileAccess.Write))
-            {
-                serializer.Serialize(fs, this);
-                SettingsFilePath = filename;
-            }
-        }
+        using var fs = new FileStream(filename, FileMode.Create, FileAccess.Write);
+        
+        serializer.Serialize(fs, this);
 
-        public static T Load(string filename)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            using (var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
-            {
-                var settings = (T)serializer.Deserialize(fs);
-                settings.SettingsFilePath = filename;
-                return settings;
-            }
-        }
+        SettingsFilePath = filename;
+    }
+
+    public static T Load(string filename)
+    {
+        XmlSerializer serializer = new(typeof(T));
+
+        using var fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
+        
+        var settings = (T)serializer.Deserialize(fs);
+        
+        settings.SettingsFilePath = filename;
+        
+        return settings;
     }
 }

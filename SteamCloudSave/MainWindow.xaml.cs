@@ -1,49 +1,47 @@
 ﻿using System;
-using System.Windows;
 using System.ComponentModel;
-using SteamCloudSave.ViewModels;
 using System.Reflection;
+using System.Windows;
+using SteamCloudSave.ViewModels;
 
-namespace SteamCloudSave
+namespace SteamCloudSave;
+
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow : Window
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    private readonly RootViewModel rootViewModel = new();
+
+    public MainWindow()
     {
-        private RootViewModel rootViewModel = new RootViewModel();
+        InitializeComponent();
 
-        public MainWindow()
-        {
-            InitializeComponent();
+        Version v = Assembly.GetEntryAssembly().GetName().Version;
+        Title = $"{Constants.GameDisplayName} - Steam Cloud Save - v{v.Major}.{v.Minor}.{v.Build}";
 
-            Version v = Assembly.GetEntryAssembly().GetName().Version;
-            Title = $"{Constants.GameDisplayName} - Steam Cloud Save - v{v.Major}.{v.Minor}.{v.Build}";
+        DataContext = rootViewModel;
 
-            DataContext = rootViewModel;
-
-            if (IsLoaded)
-                OnLoaded();
-            else
-                Loaded += MainWindow_Loaded;
-        }
-
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
+        if (IsLoaded)
             OnLoaded();
-        }
+        else
+            Loaded += MainWindow_Loaded;
+    }
 
-        private void OnLoaded()
-        {
-            rootViewModel.Initialize();
-        }
+    private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        OnLoaded();
+    }
 
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            base.OnClosing(e);
+    private void OnLoaded()
+    {
+        rootViewModel.Initialize();
+    }
 
-            if (rootViewModel != null)
-                rootViewModel.Close(e);
-        }
+    protected override void OnClosing(CancelEventArgs e)
+    {
+        base.OnClosing(e);
+
+        rootViewModel.Close(e);
     }
 }

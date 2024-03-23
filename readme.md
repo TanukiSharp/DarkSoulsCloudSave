@@ -25,14 +25,12 @@ The software is provided "as is", therefore, the authors and contributors cannot
 # Requirements
 
 This software requires:
-* .NET Framework 4.7.2
+* .NET 8+
 * A Dropbox and/or a Google account
 
 .NET Frameworks 4.7.2 is preinstalled on Windows 10 Fall Creators Update and higher. It can be installed separately on Windows 7 and higher.
 
 Windows XP and Vista are not supported.
-
-https://support.microsoft.com/en-us/help/4054530/microsoft-net-framework-4-7-2-offline-installer-for-windows
 
 Put the application on your disk where it has read and write access.
 For example, avoid using `Program Files` folder.
@@ -42,42 +40,18 @@ For example, avoid using `Program Files` folder.
 When you run the application for the first time, it needs to be authorized to access your Dropbox account.
 Hereafter is the procedure.
 
-The first dialog box tells you that a web page to Dropbox will open, asking you to allow `DarkSoulsCloudSave` application to access its own folder in your Dropbox account.
+Your favorite web browser will open a page from Dropbox.
 
-![Authorization](Images/readme/authorization1.png "Authorization")
+![Authorization](Images/readme/authorization.png "Authorization")
 
-Once you click the `OK` button, your favourite web browser will open a page from Dropbox.
-
-![Authorization](Images/readme/authorization2.png "Authorization")
-
-Before proceeding, please **make sure** this is indeed a page from Dropbox.
-You should see the Dropbox Inc highlighted in green beside the dropbox.com address. (feel free to check the certificate in doubt)
+Before proceeding, please **make sure** this is indeed a page from Dropbox. (feel free to check the certificate in doubt)
 
 If the page is not secure or if it is not from Dropbox, **do not** click the `Allow` button, just click `Cancel` and leave the page.
 
-Note: this will grant read and write access to **its own folder** but inside **your** Dropbox, as stated in the screenshot.
-If you disagree with that, do not allow the application. However, the application can only access its own folder and nothing else, of course all your other data remain private and safe.
+Note: this will grant read and write access to the application's **own folder** inside **your** Dropbox, as stated in the screenshot.
+If you disagree with that, do not allow the application. However, the application can only access its own folder and nothing else, of course all your other data remain private.
 
-Once you allowed, you should be redirected to a page providing you a code.
-
-![Authorization](Images/readme/authorization3.png "Authorization")
-
-And so, as stated in the very first dialog box, copy this code to the clipboard.
-
-![Authorization](Images/readme/authorization4.png "Authorization")
-
-Then return to the application, where you should see the following dialog, telling you that once you click the `OK` button, the application will read the clipboard in order to retrieve the code provided by Dropbox.
-
-Please make sure to not copy anything else between the moment you copied the code and the moment you click the `OK` button, or this would invalidate the clipboard and fill it with data that makes no sense to Dropbox.
-
-![Authorization](Images/readme/authorization5.png "Authorization")
-
-Finally, if everything goes right, the application confirms you that it succeeded.
-
-If this is not the case, please file an issue and I will try to answer as fast as possible.
-
-![Authorization](Images/readme/authorization6.png "Authorization")
-![Authorization](Images/readme/authorization7.png "Authorization")
+Once you allowed, you are invited to close the browser's page and return to the application.
 
 Note: This procedure has to be done only once, but it has to be done on each machine you want to use the application.
 
@@ -90,13 +64,13 @@ Then, allow the application to access storage.
 
 Note that this will only grant access to a separate store only accessible by this application, and this application will never be able to access anything else in your Google Drive.
 
-Once allow, you should see a message such as:
+Once allowed, you should see a message such as:
 
 ```
 Received verification code. You may now close this window.
 ```
 
-At that moment, you can close that browser's tab and the application is ready to use.
+At that moment, you can close that browser's page and the application is ready to use.
 
 Note: This procedure has to be done only once, but it has to be done on each machine you want to use the application.
 
@@ -106,7 +80,7 @@ Thanks to the code you provided to the application during the authorization proc
 
 The `access token` is what proves to Dropbox that the application has been granted access.
 
-It is stored encrypted in the file `storageconfig/DropboxCloudStorage.config`.
+It is stored encrypted in the file `storageconfig/DropboxCloudStorage.config` on Windows only, other platforms store the access token in clear.
 
 ![Storage Configuration](Images/readme/file_storageconfig.png "Storage Configuration")
 
@@ -119,7 +93,7 @@ If you think you have been stolen this `access token`, you'd rather revoke acces
 
 # How the application works
 
-From now on, Dropbox will be abstracted to 'the cloud', as much as possible, since any other cloud storage service could be used instead.
+From now on, Dropbox / Google Drive will be abstracted to 'the cloud', as much as possible, since any other cloud storage service could be used instead.
 
 ## Store
 
