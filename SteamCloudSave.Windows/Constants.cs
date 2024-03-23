@@ -1,6 +1,6 @@
 ﻿using SteamCloudSave.Core;
 
-namespace SteamCloudSave;
+namespace SteamCloudSave.Windows;
 
 public static class Constants
 {

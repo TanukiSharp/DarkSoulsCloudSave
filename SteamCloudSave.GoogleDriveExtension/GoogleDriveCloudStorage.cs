@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -173,6 +174,8 @@ public class GoogleDriveCloudStorage : ICloudStorage
     /// </summary>
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
+
         if (driveService is not null)
         {
             driveService.Dispose();

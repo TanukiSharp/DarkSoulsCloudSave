@@ -11,9 +11,9 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using SteamCloudSave.Core;
-using SteamCloudSave.DataModels.Configuration.V1;
+using SteamCloudSave.Windows.DataModels.Configuration.V1;
 
-namespace SteamCloudSave.ViewModels;
+namespace SteamCloudSave.Windows.ViewModels;
 
 public class RootViewModel : ViewModelBase
 {

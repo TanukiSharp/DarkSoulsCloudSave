@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace SteamCloudSave.ValueConverter;
+namespace SteamCloudSave.Windows.ValueConverter;
 
 public class InverseBooleanValueConverter : IValueConverter
 {

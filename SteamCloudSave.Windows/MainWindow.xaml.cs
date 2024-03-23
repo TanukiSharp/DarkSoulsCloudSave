@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
-using SteamCloudSave.ViewModels;
+using SteamCloudSave.Windows.ViewModels;
 
-namespace SteamCloudSave;
+namespace SteamCloudSave.Windows;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml

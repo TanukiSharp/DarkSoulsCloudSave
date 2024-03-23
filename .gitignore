@@ -1,11 +1,12 @@
 .vs/
+.vscode/
+
 SteamCloudSave.Core/bin/
 SteamCloudSave.Core/obj/
-SteamCloudSave/bin/Build/
-SteamCloudSave/bin/Debug/
-SteamCloudSave/bin/Release/
-SteamCloudSave/obj/
-packages/
+SteamCloudSave.Windows/bin/Build/
+SteamCloudSave.Windows/bin/Debug/
+SteamCloudSave.Windows/bin/Release/
+SteamCloudSave.Windows/obj/
 SteamCloudSave.DropboxExtension/bin/
 SteamCloudSave.DropboxExtension/obj/
 SteamCloudSave.GoogleDriveExtension/bin/

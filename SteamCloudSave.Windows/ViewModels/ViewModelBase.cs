@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace SteamCloudSave.ViewModels;
+namespace SteamCloudSave.Windows.ViewModels;
 
 public abstract class ViewModelBase : INotifyPropertyChanged
 {

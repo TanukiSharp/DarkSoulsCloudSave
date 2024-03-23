@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Xml.Serialization;
 
-namespace SteamCloudSave.DataModels;
+namespace SteamCloudSave.Windows.DataModels;
 
 public abstract class ConfigurationBase<T> where T : ConfigurationBase<T>
 {
@@ -13,7 +13,7 @@ public abstract class ConfigurationBase<T> where T : ConfigurationBase<T>
         XmlSerializer serializer = new(typeof(T));
 
         using var fs = new FileStream(filename, FileMode.Create, FileAccess.Write);
-        
+
         serializer.Serialize(fs, this);
 
         SettingsFilePath = filename;
@@ -24,11 +24,11 @@ public abstract class ConfigurationBase<T> where T : ConfigurationBase<T>
         XmlSerializer serializer = new(typeof(T));
 
         using var fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
-        
+
         var settings = (T)serializer.Deserialize(fs);
-        
+
         settings.SettingsFilePath = filename;
-        
+
         return settings;
     }
 }

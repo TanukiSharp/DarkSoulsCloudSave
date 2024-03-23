@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SteamCloudSave.Core;
 
-namespace SteamCloudSave.ViewModels;
+namespace SteamCloudSave.Windows.ViewModels;
 
 public class CloudStorageViewModel : ViewModelBase
 {

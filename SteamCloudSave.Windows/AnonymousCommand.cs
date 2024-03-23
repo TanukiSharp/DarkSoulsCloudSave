@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace SteamCloudSave;
+namespace SteamCloudSave.Windows;
 
 public class AnonymousCommand : AnonymousCommand<object>
 {
