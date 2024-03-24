@@ -1,23 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <OutputType>Library</OutputType>
-    <Copyright>Copyright © TanukiSharp 2016 - 2024</Copyright>
-    <AssemblyVersion>1.0.2</AssemblyVersion>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DocumentationFile>bin\Debug\SteamCloudSave.DropboxExtension.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DocumentationFile>bin\Release\SteamCloudSave.DropboxExtension.xml</DocumentationFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SteamCloudSave.Core\SteamCloudSave.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Dropbox.Api" Version="6.37.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<OutputType>Library</OutputType>
+		<Copyright>Copyright © TanukiSharp 2016 - 2024</Copyright>
+		<AssemblyVersion>1.0.2</AssemblyVersion>
+		<Nullable>enable</Nullable>
+		<WarningLevel>9999</WarningLevel>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<DocumentationFile>bin\Debug\SteamCloudSave.DropboxExtension.xml</DocumentationFile>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<DocumentationFile>bin\Release\SteamCloudSave.DropboxExtension.xml</DocumentationFile>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SteamCloudSave.Core\SteamCloudSave.Core.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Dropbox.Api" Version="6.37.0" />
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
 </Project>

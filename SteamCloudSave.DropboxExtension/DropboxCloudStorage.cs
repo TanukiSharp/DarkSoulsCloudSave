@@ -18,7 +18,7 @@ namespace SteamCloudSave.DropboxExtension;
 /// </summary>
 public class DropboxCloudStorage : ICloudStorage
 {
-    private DropboxClient dropboxClient;
+    private DropboxClient dropboxClient = null!;
 
     private readonly string appKey;
     private readonly string appSecret;
@@ -45,9 +45,9 @@ public class DropboxCloudStorage : ICloudStorage
     /// <returns>Returns a task to be awaited until the initialization process is done.</returns>
     public async Task Initialize()
     {
-        string accessToken;
+        string? accessToken;
 
-        IReadOnlyDictionary<string, string> config = ConfigurationUtility.ReadConfigurationFile(GetType());
+        IReadOnlyDictionary<string, string?> config = ConfigurationUtility.ReadConfigurationFile(GetType());
 
         if (config.TryGetValue("AccessToken", out accessToken) && string.IsNullOrWhiteSpace(accessToken) == false)
             accessToken = SecurityUtility.UnprotectString(accessToken);
@@ -56,7 +56,7 @@ public class DropboxCloudStorage : ICloudStorage
         {
             accessToken = await ObtainAccessToken();
 
-            ConfigurationUtility.CreateConfigurationFile(GetType(), new Dictionary<string, string>
+            ConfigurationUtility.CreateConfigurationFile(GetType(), new Dictionary<string, string?>
             {
                 { "AccessToken", SecurityUtility.ProtectString(accessToken) },
             });
@@ -222,7 +222,7 @@ public class DropboxCloudStorage : ICloudStorage
         if (dropboxClient is not null)
         {
             dropboxClient.Dispose();
-            dropboxClient = null;
+            dropboxClient = null!;
         }
     }
 }

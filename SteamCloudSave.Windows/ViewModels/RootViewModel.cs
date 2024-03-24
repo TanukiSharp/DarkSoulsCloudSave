@@ -436,7 +436,7 @@ public class RootViewModel : ViewModelBase
         {
             Status = "Backing up local save data...";
 
-            await SaveDataUtility.BackupLocalSaveData();
+            await SaveDataUtility.BackupLocalSaveData("ds3");
 
             CloudStorageViewModel restoreSource = CloudStorageViewModels.FirstOrDefault(x => x.IsRestoreSource);
 

@@ -122,8 +122,12 @@ public class SaveDataUtility
         foreach (ZipArchiveEntry entry in archive.Entries.Where(e => e.Length > 0))
         {
             string targetFilename = Path.Combine(SaveDataPath, entry.FullName);
-            string targetDirectory = Path.GetDirectoryName(targetFilename);
-            Directory.CreateDirectory(targetDirectory);
+            string? targetDirectory = Path.GetDirectoryName(targetFilename);
+
+            if (targetDirectory is not null)
+            {
+                Directory.CreateDirectory(targetDirectory);
+            }
 
             using Stream sourceStream = entry.Open();
             using var targetStream = new FileStream(targetFilename, FileMode.OpenOrCreate, FileAccess.Write);
@@ -135,15 +139,16 @@ public class SaveDataUtility
     /// <summary>
     /// Backs up all the local save data to the backup folder, in a compressed form.
     /// </summary>
+    /// <param name="gamePrefix">Something that identifies a specific game.</param>
     /// <returns>Returns a task to be awaited until the backup process is done.</returns>
-    public async Task BackupLocalSaveData()
+    public async Task BackupLocalSaveData(string gamePrefix)
     {
         if (Directory.Exists(SaveDataPath) == false)
+        {
             return;
+        }
 
-        string now = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-fff");
-
-        string filename = $"{now}.zip";
+        string filename = $"{gamePrefix}_{DateTime.Now:yyyy-MM-dd_HH-mm-ss-fff}.zip";
 
         Stream archiveStream = await GetSaveDataArchive();
         using var targetStream = new FileStream(Path.Combine(BackupsPath, filename), FileMode.OpenOrCreate, FileAccess.Write);

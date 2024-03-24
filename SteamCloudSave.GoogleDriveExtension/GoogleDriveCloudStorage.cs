@@ -25,7 +25,7 @@ public class GoogleDriveCloudStorage : ICloudStorage
     private readonly string clientId;
     private readonly string clientSecret;
 
-    private DriveService driveService;
+    private DriveService driveService = null!;
 
     /// <summary>
     /// Gets the display name of the current <see cref="ICloudStorage"/> instance.
@@ -51,8 +51,13 @@ public class GoogleDriveCloudStorage : ICloudStorage
     /// <returns>Returns a task to be awaited until the initialization process is done.</returns>
     public async Task Initialize()
     {
-        string path = ConfigurationUtility.GetExtensionConfigurationFilePath(GetType());
+        string? path = ConfigurationUtility.GetExtensionConfigurationFilePath(GetType());
         path = Path.GetDirectoryName(path);
+
+        if (path is null)
+        {
+            throw new InvalidOperationException("Failed to determine ");
+        }
 
         UserCredential credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
             new ClientSecrets
@@ -89,12 +94,14 @@ public class GoogleDriveCloudStorage : ICloudStorage
 
         foreach (IGrouping<string, Data.File> fileGroup in files.GroupBy(x => x.Name))
         {
-            Data.File newest = fileGroup.OrderByDescending(x => x.CreatedTimeDateTimeOffset).FirstOrDefault();
+            Data.File? newest = fileGroup.OrderByDescending(x => x.CreatedTimeDateTimeOffset).FirstOrDefault();
             if (newest is not null)
             {
                 string name = newest.OriginalFilename ?? newest.Name;
                 if (name is null)
+                {
                     continue;
+                }
                 name = name.TrimStart('/');
                 result.Add(CloudStorageFileInfo.ParseCloudStorageFileInfo(name, newest.Id));
             }
@@ -139,7 +146,9 @@ public class GoogleDriveCloudStorage : ICloudStorage
         IUploadProgress result = await request.UploadAsync();
 
         if (result.Exception is not null)
+        {
             throw result.Exception;
+        }
 
         return result.Status == UploadStatus.Completed;
     }
@@ -179,7 +188,7 @@ public class GoogleDriveCloudStorage : ICloudStorage
         if (driveService is not null)
         {
             driveService.Dispose();
-            driveService = null;
+            driveService = null!;
         }
     }
 }
