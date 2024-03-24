@@ -442,16 +442,32 @@ public class RootViewModel : ViewModelBase
 
         isGameStarting = true;
 
-        var tcs = new TaskCompletionSource<bool>();
+        var started = new TaskCompletionSource<bool>();
+        var stopped = new TaskCompletionSource<bool>();
 
-        void onGameStopped(object? ss, EventArgs ee) => tcs.TrySetResult(true);
+        var timeout = TimeSpan.FromSeconds(10.0);
 
+        using var startedTimeout = new CancellationTokenSource(timeout);
+        startedTimeout.Token.Register(() => started.TrySetCanceled());
+
+        void onGameStarted(object? ss, EventArgs ee) => started.TrySetResult(true);
+        void onGameStopped(object? ss, EventArgs ee) => stopped.TrySetResult(true);
+
+        GameStarted += onGameStarted;
         GameStopped += onGameStopped;
 
         try
         {
-            Process.Start(Constants.GameSteamUrl);
-            await tcs.Task;
+            Process.Start(new ProcessStartInfo("cmd", $"/c start {Constants.GameSteamUrl}") { CreateNoWindow = true });
+
+            Status = "Waiting for game to start...";
+
+            await started.Task;
+            await stopped.Task;
+        }
+        catch (TaskCanceledException)
+        {
+            Status = $"Error: The game didn't start within {timeout.TotalSeconds} seconds.";
         }
         catch (Exception ex)
         {
@@ -459,7 +475,9 @@ public class RootViewModel : ViewModelBase
         }
         finally
         {
+            GameStarted -= onGameStarted;
             GameStopped -= onGameStopped;
+
             isGameStarting = false;
         }
     }
