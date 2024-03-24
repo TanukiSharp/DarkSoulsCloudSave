@@ -54,6 +54,13 @@ public class RootViewModel : ViewModelBase
         private set { SetValue(ref isRunGameLocked, value); }
     }
 
+    private bool isGameStarting;
+    public bool IsGameStarting
+    {
+        get { return isGameStarting; }
+        private set { SetValue(ref isGameStarting, value); }
+    }
+
     private bool isAutoStore;
     public bool IsAutoStore
     {
@@ -391,7 +398,6 @@ public class RootViewModel : ViewModelBase
     private readonly IClipboardService clipboardService;
     private readonly IMessageBoxService messageBoxService;
 
-    private bool isGameStarting;
     private readonly ManualResetEventSlim gameProcessMonitoring = new();
 
     private event EventHandler GameStarted = null!;
@@ -435,12 +441,12 @@ public class RootViewModel : ViewModelBase
 
     private async Task RunGameProcess()
     {
-        if (isGameStarting || IsRunGameLocked)
+        if (IsGameStarting || IsRunGameLocked)
         {
             return;
         }
 
-        isGameStarting = true;
+        IsGameStarting = true;
 
         var started = new TaskCompletionSource<bool>();
         var stopped = new TaskCompletionSource<bool>();
@@ -458,7 +464,7 @@ public class RootViewModel : ViewModelBase
 
         try
         {
-            Process.Start(new ProcessStartInfo("cmd", $"/c start {Constants.GameSteamUrl}") { CreateNoWindow = true });
+            Process.Start(new ProcessStartInfo(Constants.GameSteamUrl) { UseShellExecute = true });
 
             Status = "Waiting for game to start...";
 
@@ -478,7 +484,7 @@ public class RootViewModel : ViewModelBase
             GameStarted -= onGameStarted;
             GameStopped -= onGameStopped;
 
-            isGameStarting = false;
+            IsGameStarting = false;
         }
     }
 

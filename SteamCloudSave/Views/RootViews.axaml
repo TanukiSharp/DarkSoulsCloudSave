@@ -146,13 +146,17 @@
 					</Button.Styles>
 				</Button>
 
-				<Button x:Name="btnRunGame" Classes.isRunGameLocked="{Binding IsRunGameLocked}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="1" Grid.Row="1" Margin="8 4 8 4" Command="{Binding StartGameCommand, Mode=OneTime}">
+				<Button x:Name="btnRunGame" Classes.isRunGameLocked="{Binding IsRunGameLocked}" Classes.isGameStarting="{Binding IsGameStarting}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="1" Grid.Row="1" Margin="8 4 8 4" Command="{Binding StartGameCommand, Mode=OneTime}">
 					<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
 						<Image Source="/Assets/Game.png" Width="48" Height="48" />
 						<TextBlock Text="Run Game" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12 0 12 0" FontSize="40"/>
 					</StackPanel>
 					<Button.Styles>
 						<Style Selector="Button.isRunGameLocked">
+							<Setter Property="IsEnabled" Value="False"/>
+							<Setter Property="Opacity" Value="0.5"/>
+						</Style>
+						<Style Selector="Button.isGameStarting">
 							<Setter Property="IsEnabled" Value="False"/>
 							<Setter Property="Opacity" Value="0.5"/>
 						</Style>
