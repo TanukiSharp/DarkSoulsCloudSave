@@ -77,6 +77,10 @@ public enum ButtonResult
     /// The user clicked the Cancel button.
     /// </summary>
     Cancel,
+    /// <summary>
+    /// The user clicked no buttons.
+    /// </summary>
+    None,
 };
 
 /// <summary>

@@ -1,5 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Rendering;
+using Avalonia.VisualTree;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Base;
 using SteamCloudSave.Core;
@@ -31,7 +36,22 @@ internal class MessageBoxService : IMessageBoxService
 
         IMsBox<MsBox.Avalonia.Enums.ButtonResult> dialogBox = MessageBoxManager.GetMessageBoxStandard(title, message, messageBoxButtons, messageBoxImage);
 
-        MsBox.Avalonia.Enums.ButtonResult result = await dialogBox.ShowAsync();
+        MsBox.Avalonia.Enums.ButtonResult result;
+
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow is not null)
+        {
+            result = await dialogBox.ShowWindowDialogAsync(desktop.MainWindow);
+        }
+        else if (Application.Current?.ApplicationLifetime is ISingleViewApplicationLifetime applicationLifetime)
+        {
+            IRenderRoot? renderRoot = applicationLifetime.MainView?.GetVisualRoot();
+            ContentControl contentControl = renderRoot as ContentControl ?? throw new InvalidOperationException("Could not get window root instance.");
+            result = await dialogBox.ShowAsPopupAsync(contentControl);
+        }
+        else
+        {
+            result = await dialogBox.ShowWindowAsync();
+        }
 
         return result switch
         {
@@ -40,6 +60,7 @@ internal class MessageBoxService : IMessageBoxService
             MsBox.Avalonia.Enums.ButtonResult.No => ButtonResult.No,
             MsBox.Avalonia.Enums.ButtonResult.Abort => ButtonResult.Abort,
             MsBox.Avalonia.Enums.ButtonResult.Cancel => ButtonResult.Cancel,
+            MsBox.Avalonia.Enums.ButtonResult.None => ButtonResult.None,
             _ => throw new InvalidOperationException(),
         };
     }

@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input.Platform;
+using Avalonia.Rendering;
 using Avalonia.VisualTree;
 using SteamCloudSave.Core;
 
@@ -32,7 +33,7 @@ public class ClipboardService : IClipboardService
 
         if (application.ApplicationLifetime is ISingleViewApplicationLifetime viewApp)
         {
-            var visualRoot = viewApp.MainView?.GetVisualRoot();
+            IRenderRoot? visualRoot = viewApp.MainView?.GetVisualRoot();
             return visualRoot as TopLevel ?? throw new InvalidOperationException("Could not get window root instance.");
         }
 
