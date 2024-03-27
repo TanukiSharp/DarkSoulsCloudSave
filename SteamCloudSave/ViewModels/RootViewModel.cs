@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -142,7 +143,7 @@ public class RootViewModel : ViewModelBase
 
         configuration = LoadConfiguration();
 
-        SaveDataUtility = new SaveDataUtility(Constants.SaveDataPath, Constants.GameArchiveMode);
+        SaveDataUtility = new SaveDataUtility(GetSaveDataPath(), Constants.GameArchiveMode);
 
         ConfigureStorageViewModels(configuration);
 
@@ -154,6 +155,22 @@ public class RootViewModel : ViewModelBase
         isInitializing = false;
 
         CloudStorageSelectionChanged();
+    }
+
+    private static string GetSaveDataPath()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return Constants.WindowsSaveDataPath;
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return Constants.LinuxSaveDataPath;
+        }
+        else
+        {
+            throw new NotSupportedException("Operating system not supported.");
+        }
     }
 
     internal void CloudStorageSelectionChanged()
