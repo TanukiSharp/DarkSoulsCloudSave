@@ -1,4 +1,5 @@
-﻿using SteamCloudSave.Core;
+﻿using System;
+using SteamCloudSave.Core;
 
 namespace SteamCloudSave;
 
@@ -22,4 +23,13 @@ public static class DropboxConstants
 {
     public const string AppKey = "cwoecqgt2xtma0l";
     public const string AppSecret = "2a3si3j0kvgrush";
+}
+
+public static class Timeouts
+{
+    public static readonly TimeSpan InitializeTimeout = TimeSpan.FromSeconds(30.0);
+    public static readonly TimeSpan ListFilesTimeout = TimeSpan.FromSeconds(20.0);
+    public static readonly TimeSpan DownloadTimeout = TimeSpan.FromSeconds(30.0);
+    public static readonly TimeSpan UploadTimeout = TimeSpan.FromSeconds(60.0);
+    public static readonly TimeSpan DeleteTimeout = TimeSpan.FromSeconds(20.0);
 }

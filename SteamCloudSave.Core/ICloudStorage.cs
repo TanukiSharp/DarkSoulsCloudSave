@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SteamCloudSave.Core;
@@ -14,7 +15,7 @@ public struct CloudStorageFileInfo
     /// <summary>
     /// Date and time format used to prefix filenames.
     /// </summary>
-    public const string TimestampFormat = "yyyyMMddHHmmssfff";
+    public const string TimestampFormat = "yyyy-MM-dd_HH-mm-ss-fff";
 
     /// <summary>
     /// Gets the date and time when the file was stored to the cloud.
@@ -70,7 +71,7 @@ public struct CloudStorageFileInfo
 /// <summary>
 /// Represents an application-independent cloud storage.
 /// </summary>
-public interface ICloudStorage : IDisposable
+public interface ICloudStorage : IAsyncDisposable
 {
     /// <summary>
     /// Gets the display name of the current <see cref="ICloudStorage"/> instance.
@@ -81,40 +82,47 @@ public interface ICloudStorage : IDisposable
     /// Initializes the cloud storage.
     /// </summary>
     /// <returns>Returns a task to be awaited until initialization is done.</returns>
-    Task Initialize();
+    Task InitializeAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Lists the available remote save data in the cloud storage.
     /// </summary>
+    /// <param name="path">The path where to list files.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>Returns an array of remote files.</returns>
-    Task<IReadOnlyList<CloudStorageFileInfo>> ListFiles();
+    Task<IReadOnlyList<CloudStorageFileInfo>> ListFilesAsync(string path, CancellationToken cancellationToken);
 
     /// <summary>
     /// Downloads a remote file to a local stream.
     /// </summary>
     /// <param name="fileInfo">The file information representing the remote file to download.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>Returns a task to be awaited producing a stream containing the content of the remote file.</returns>
-    Task<Stream> Download(CloudStorageFileInfo fileInfo);
+    Task<Stream> DownloadAsync(CloudStorageFileInfo fileInfo, CancellationToken cancellationToken);
 
     /// <summary>
     /// Uploads a local file to the cloud storage.
     /// </summary>
-    /// <param name="localFilename">The name of the local file being uploaded.</param>
+    /// <param name="remoteFilename">The full filename to be given to the remote file.</param>
     /// <param name="stream">A readable stream containing the local file content to upload to the cloud storage.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>Returns a task to be awaited until upload is done, true meaning success and false meaning a failure occured.</returns>
-    Task<bool> Upload(string localFilename, Stream stream);
+    Task<bool> UploadAsync(string remoteFilename, Stream stream, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete a remote file from the cloud storage.
     /// </summary>
     /// <param name="fileInfo">The file information representing the remote file to delete.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>Returns a task to be awaited until deletion is done, true meaning success and false meaning a failure occured.</returns>
-    Task<bool> Delete(CloudStorageFileInfo fileInfo);
+    Task<bool> DeleteAsync(CloudStorageFileInfo fileInfo, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete multiple remote files from the cloud storage.
     /// </summary>
     /// <param name="fileInfo">The file information representing the remote files to delete.</param>
+    /// <param name="perFileTimeout">Time allowed per file deletion.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>Returns a task to be awaited until deletion is done, true meaning success and false meaning a failure occured.</returns>
-    Task<bool> DeleteMany(IEnumerable<CloudStorageFileInfo> fileInfo);
+    Task<bool> DeleteManyAsync(IEnumerable<CloudStorageFileInfo> fileInfo, TimeSpan perFileTimeout, CancellationToken cancellationToken);
 }

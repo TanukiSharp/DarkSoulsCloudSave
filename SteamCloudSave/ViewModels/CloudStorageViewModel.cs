@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using DynamicData.Binding;
-using ReactiveUI;
 using SteamCloudSave.Core;
 
 namespace SteamCloudSave.ViewModels;
@@ -86,9 +84,11 @@ public class CloudStorageViewModel : ViewModelBase
         Status = "Initializing...";
         DetailedStatus = null;
 
+        using var cts = new CancellationTokenSource(Timeouts.InitializeTimeout);
+
         try
         {
-            await CloudStorage.Initialize();
+            await CloudStorage.InitializeAsync(cts.Token);
 
             Status = "Initialized";
             DetailedStatus = null;
@@ -135,7 +135,9 @@ public class CloudStorageViewModel : ViewModelBase
     {
         Status = "Retrieving save data list...";
 
-        IList<CloudStorageFileInfo> files = RootViewModel.SortFiles(await CloudStorage.ListFiles());
+        using var listCts = new CancellationTokenSource(Timeouts.ListFilesTimeout);
+
+        var files = await CloudStorage.ListFilesAsync($"/{parent.SaveDataUtility.GameRootDirectoryName}", listCts.Token);
 
         if (files.Count == 0)
         {
@@ -143,11 +145,13 @@ public class CloudStorageViewModel : ViewModelBase
             return;
         }
 
-        CloudStorageFileInfo fileInfo = files[0];
+        CloudStorageFileInfo fileInfo = RootViewModel.SortFiles(files)[0];
 
         Status = string.Format("Restoring {0}...", Path.GetFileNameWithoutExtension(fileInfo.LocalFilename));
 
-        using Stream archiveStream = await CloudStorage.Download(fileInfo);
+        using var downloadCts = new CancellationTokenSource(Timeouts.DownloadTimeout);
+
+        using Stream archiveStream = await CloudStorage.DownloadAsync(fileInfo, downloadCts.Token);
 
         await parent.SaveDataUtility.ExtractSaveDataArchive(archiveStream);
 
@@ -184,7 +188,10 @@ public class CloudStorageViewModel : ViewModelBase
         Status = string.Format("Storing...");
 
         Stream archiveStream = await parent.SaveDataUtility.GetSaveDataArchive();
-        await CloudStorage.Upload($"/{timestamp}.zip", archiveStream);
+
+        using var cts = new CancellationTokenSource(Timeouts.UploadTimeout);
+
+        await CloudStorage.UploadAsync($"/{parent.SaveDataUtility.GameRootDirectoryName}/{timestamp}.zip", archiveStream, cts.Token);
 
         Status = "Cleaning up...";
 
@@ -200,13 +207,15 @@ public class CloudStorageViewModel : ViewModelBase
 
     private async Task<bool> CleanupOldRemoteSaves(int revisionsToKeep)
     {
-        IList<CloudStorageFileInfo> files = RootViewModel.SortFiles(await CloudStorage.ListFiles());
+        var cts = new CancellationTokenSource(Timeouts.ListFilesTimeout);
+
+        IList<CloudStorageFileInfo> files = RootViewModel.SortFiles(await CloudStorage.ListFilesAsync($"/{parent.SaveDataUtility.GameRootDirectoryName}", cts.Token));
 
         if (files.Count > revisionsToKeep)
         {
             IEnumerable<CloudStorageFileInfo> toDeleteFiles = files.Skip(revisionsToKeep);
 
-            return await CloudStorage.DeleteMany(toDeleteFiles);
+            return await CloudStorage.DeleteManyAsync(toDeleteFiles, Timeouts.DeleteTimeout, CancellationToken.None);
         }
 
         return true;

@@ -252,36 +252,37 @@ public class RootViewModel : ViewModelBase
     {
         public string Name => "Null cloud storage";
 
-        public Task Initialize()
+        public Task InitializeAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
-        public void Dispose()
+        public ValueTask DisposeAsync()
         {
+            return ValueTask.CompletedTask;
         }
 
-        public async Task<IReadOnlyList<CloudStorageFileInfo>> ListFiles()
+        public async Task<IReadOnlyList<CloudStorageFileInfo>> ListFilesAsync(string path, CancellationToken cancellationToken)
         {
             return await Task.FromResult(new List<CloudStorageFileInfo>());
         }
 
-        public Task<Stream> Download(CloudStorageFileInfo fileInfo)
+        public Task<Stream> DownloadAsync(CloudStorageFileInfo fileInfo, CancellationToken cancellationToken)
         {
             return Task.FromResult(Stream.Null);
         }
 
-        public Task<bool> Upload(string localFilename, Stream stream)
+        public Task<bool> UploadAsync(string localFilename, Stream stream, CancellationToken cancellationToken)
         {
             return Task.FromResult(true);
         }
 
-        public Task<bool> Delete(CloudStorageFileInfo fileInfo)
+        public Task<bool> DeleteAsync(CloudStorageFileInfo fileInfo, CancellationToken cancellationToken)
         {
             return Task.FromResult(true);
         }
 
-        public Task<bool> DeleteMany(IEnumerable<CloudStorageFileInfo> fileInfo)
+        public Task<bool> DeleteManyAsync(IEnumerable<CloudStorageFileInfo> fileInfo, TimeSpan perFileTimeout, CancellationToken cancellationToken)
         {
             return Task.FromResult(true);
         }
@@ -501,7 +502,7 @@ public class RootViewModel : ViewModelBase
         {
             Status = "Backing up local save data...";
 
-            await SaveDataUtility.BackupLocalSaveData("ds3");
+            await SaveDataUtility.BackupLocalSaveData();
 
             CloudStorageViewModel? restoreSource = CloudStorageViewModels.FirstOrDefault(x => x.IsRestoreSource);
 

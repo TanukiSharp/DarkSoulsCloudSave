@@ -43,21 +43,34 @@ public class SaveDataUtility
 
         saveDataPath = Path.GetFullPath(Environment.ExpandEnvironmentVariables(saveDataPath));
 
-        string lastPathPart = Path.GetFileName(saveDataPath);
+        string? lastPathPart = Path.GetFileName(saveDataPath);
 
+        if (lastPathPart is null)
+        {
+            throw new InvalidOperationException($"Failed to determine directory name for '{saveDataPath}'.");
+        }
+
+        GameRootDirectoryName = lastPathPart;
         SaveDataPath = saveDataPath;
 
-        BackupsPath = Path.GetFullPath($"./backups/{lastPathPart}");
-        if (Directory.Exists(BackupsPath) == false)
-            Directory.CreateDirectory(BackupsPath);
-    }
+        BackupsPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "backups", GameRootDirectoryName));
 
+        if (Directory.Exists(BackupsPath) == false)
+        {
+            Directory.CreateDirectory(BackupsPath);
+        }
+    }
 
     /// <summary>
     /// Gets the full path where save data files are located.
     /// This is outside the application folder.
     /// </summary>
     public string SaveDataPath { get; private set; }
+
+    /// <summary>
+    /// Gets the game save data directory name.
+    /// </summary>
+    public string GameRootDirectoryName { get; private set; }
 
     /// <summary>
     /// Gets the fill path where save data backups are stored.
@@ -85,6 +98,7 @@ public class SaveDataUtility
             else if (archiveMode == ArchiveMode.SubFolders)
             {
                 IEnumerable<string> dirs = Directory.EnumerateDirectories(SaveDataPath, "*", SearchOption.TopDirectoryOnly);
+
                 foreach (string dir in dirs)
                 {
                     files = Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories);
@@ -139,16 +153,15 @@ public class SaveDataUtility
     /// <summary>
     /// Backs up all the local save data to the backup folder, in a compressed form.
     /// </summary>
-    /// <param name="gamePrefix">Something that identifies a specific game.</param>
     /// <returns>Returns a task to be awaited until the backup process is done.</returns>
-    public async Task BackupLocalSaveData(string gamePrefix)
+    public async Task BackupLocalSaveData()
     {
         if (Directory.Exists(SaveDataPath) == false)
         {
             return;
         }
 
-        string filename = $"{gamePrefix}_{DateTime.Now:yyyy-MM-dd_HH-mm-ss-fff}.zip";
+        string filename = $"{DateTime.Now:yyyy-MM-dd_HH-mm-ss-fff}.zip";
 
         Stream archiveStream = await GetSaveDataArchive();
         using var targetStream = new FileStream(Path.Combine(BackupsPath, filename), FileMode.OpenOrCreate, FileAccess.Write);
