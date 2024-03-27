@@ -17,7 +17,7 @@
 
 			<TextBlock FontSize="14" DockPanel.Dock="Bottom" Margin="0" Text="{Binding Status, Mode=OneWay}" Background="#0C000000" Padding="2"/>
 
-			<Expander DockPanel.Dock="Right" Padding="4" Margin="0" Background="#0C000000" ExpandDirection="Left" VerticalAlignment="Stretch">
+			<Expander DockPanel.Dock="Right" Padding="4" Margin="0" Background="#0C000000" MinWidth="0" ExpandDirection="Left" VerticalAlignment="Stretch">
 				<Expander.Header>
 					<LayoutTransformControl>
 						<LayoutTransformControl.LayoutTransform>
