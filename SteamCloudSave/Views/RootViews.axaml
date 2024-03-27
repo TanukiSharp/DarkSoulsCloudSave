@@ -27,8 +27,9 @@
 					</LayoutTransformControl>
 				</Expander.Header>
 
-				<ItemsControl ItemsSource="{Binding CloudStorageViewModels, Mode=OneTime}" ItemTemplate="{StaticResource CloudStorageView}">
-				</ItemsControl>
+				<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+					<ItemsControl ItemsSource="{Binding CloudStorageViewModels, Mode=OneTime}" ItemTemplate="{StaticResource CloudStorageView}"/>
+				</ScrollViewer>
 
 				<Expander.Template>
 					<ControlTemplate>
