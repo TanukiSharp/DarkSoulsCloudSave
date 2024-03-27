@@ -9,7 +9,7 @@ public static class Constants
     public const string GameSteamUrl = "steam://rungameid/374320";
     public const string ProcessName = "DarkSoulsIII";
     public const string WindowsSaveDataPath = "%APPDATA%/DarkSoulsIII";
-    public const string LinuxSaveDataPath = "%USER%/.steam/steam/steamapps/compatdata/374320/pfx/drive_c/users/steamuser/Application Data/DarkSoulsIII";
+    public const string LinuxSaveDataPath = "%HOME%/.steam/steam/steamapps/compatdata/374320/pfx/drive_c/users/steamuser/Application Data/DarkSoulsIII";
     public const ArchiveMode GameArchiveMode = ArchiveMode.SubFolders;
 }
 
@@ -28,6 +28,7 @@ public static class DropboxConstants
 
 public static class Timeouts
 {
+    public static readonly TimeSpan GameStartTimeout = TimeSpan.FromSeconds(20.0);
     public static readonly TimeSpan InitializeTimeout = TimeSpan.FromSeconds(30.0);
     public static readonly TimeSpan ListFilesTimeout = TimeSpan.FromSeconds(20.0);
     public static readonly TimeSpan DownloadTimeout = TimeSpan.FromSeconds(30.0);

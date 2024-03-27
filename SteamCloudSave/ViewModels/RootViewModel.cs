@@ -431,9 +431,9 @@ public class RootViewModel : ViewModelBase
             {
                 bool localIsRunGameLocked = dispatcher.Invoke(() => IsRunGameLocked);
 
-                Process[] processes = Process.GetProcessesByName(Constants.ProcessName);
+                bool isGameProcessRunnging = IsGameProcessRunning();
 
-                if (processes.Length > 0 && localIsRunGameLocked == false)
+                if (isGameProcessRunnging && localIsRunGameLocked == false)
                 {
                     dispatcher.Invoke(() =>
                     {
@@ -442,7 +442,7 @@ public class RootViewModel : ViewModelBase
                         GameStarted?.Invoke(this, EventArgs.Empty);
                     });
                 }
-                else if (processes.Length == 0 && localIsRunGameLocked)
+                else if (isGameProcessRunnging == false && localIsRunGameLocked)
                 {
                     dispatcher.Invoke(() =>
                     {
@@ -457,6 +457,28 @@ public class RootViewModel : ViewModelBase
         });
     }
 
+    private static bool IsGameProcessRunning()
+    {
+        string processName;
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            processName = Constants.ProcessName;
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            processName = $"{Constants.ProcessName}.ex";
+        }
+        else
+        {
+            return false;
+        }
+
+        Process[] processes = Process.GetProcessesByName(processName);
+
+        return processes.Length > 0;
+    }
+
     private async Task RunGameProcess()
     {
         if (IsGameStarting || IsRunGameLocked)
@@ -469,9 +491,7 @@ public class RootViewModel : ViewModelBase
         var started = new TaskCompletionSource<bool>();
         var stopped = new TaskCompletionSource<bool>();
 
-        var timeout = TimeSpan.FromSeconds(10.0);
-
-        using var startedTimeout = new CancellationTokenSource(timeout);
+        using var startedTimeout = new CancellationTokenSource(Timeouts.GameStartTimeout);
         startedTimeout.Token.Register(() => started.TrySetCanceled());
 
         void onGameStarted(object? ss, EventArgs ee) => started.TrySetResult(true);
@@ -491,7 +511,7 @@ public class RootViewModel : ViewModelBase
         }
         catch (TaskCanceledException)
         {
-            Status = $"Error: The game didn't start within {timeout.TotalSeconds} seconds.";
+            Status = $"Error: The game didn't start within {Timeouts.GameStartTimeout.TotalSeconds} seconds.";
         }
         catch (Exception ex)
         {
