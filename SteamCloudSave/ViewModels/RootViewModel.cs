@@ -18,8 +18,8 @@ namespace SteamCloudSave.ViewModels;
 
 public class RootViewModel : ViewModelBase
 {
-    private readonly IList<ICloudStorage> availableCloudStorages = new List<ICloudStorage>
-    {
+    private readonly IList<ICloudStorage> availableCloudStorages =
+    [
         //new NullCloudStorage(),
 
         new DropboxExtension.DropboxCloudStorage(
@@ -32,7 +32,7 @@ public class RootViewModel : ViewModelBase
             GoogleDriveConstants.ClientId,
             GoogleDriveConstants.ClientSecret
         ),
-    };
+    ];
 
     public IList<CloudStorageViewModel> CloudStorageViewModels { get; }
 
