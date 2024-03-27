@@ -84,7 +84,7 @@
 													</Path>
 												</Border>
 											</Grid>
-										</Border>									
+										</Border>
 									</ControlTemplate>
 								</ToggleButton.Template>
 							</ToggleButton>

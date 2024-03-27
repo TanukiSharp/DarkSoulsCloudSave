@@ -1,4 +1,4 @@
-﻿namespace SteamCloudSave.DataModels.Configuration.Configuration.V1;
+namespace SteamCloudSave.DataModels.Configuration.Configuration.V1;
 
 public class Configuration : ConfigurationBase<Configuration>
 {
