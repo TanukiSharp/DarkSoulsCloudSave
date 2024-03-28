@@ -1,15 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0</TargetFramework>
 		<Copyright>Copyright © TanukiSharp 2016 - 2024</Copyright>
 		<AssemblyVersion>1.1.0</AssemblyVersion>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
 		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
 		<Nullable>enable</Nullable>
 		<WarningLevel>9999</WarningLevel>
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+		<PublishDir>$(MSBuildThisFileDirectory)\..\Builds\$(RuntimeIdentifier)\DarkSoulsCloudSave_$(AssemblyVersion)</PublishDir>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -38,4 +41,28 @@
 		<Resource Include="Assets\Game.png" />
 		<Resource Include="Assets\Upload.png" />
 	</ItemGroup>
+
+	<UsingTask TaskName="ZipDir" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+		<ParameterGroup>
+			<SourceDirectory ParameterType="System.String" Required="true" />
+			<DestinationFile ParameterType="System.String" Required="true" />
+		</ParameterGroup>
+		<Task>
+			<Using Namespace="System.IO.Compression" />
+			<Code Type="Fragment" Language="cs">
+				<![CDATA[
+				if (File.Exists(DestinationFile))
+				{
+					File.Delete(DestinationFile);
+				}
+				ZipFile.CreateFromDirectory(SourceDirectory, DestinationFile, CompressionLevel.Optimal, true);
+				Directory.Delete(SourceDirectory, true);
+				]]>
+			</Code>
+		</Task>
+	</UsingTask>
+
+	<Target Name="PackApplication" AfterTargets="Publish">
+		<ZipDir SourceDirectory="$(PublishDir)" DestinationFile="$(PublishDir.TrimEnd('\')).zip"/>
+	</Target>
 </Project>
