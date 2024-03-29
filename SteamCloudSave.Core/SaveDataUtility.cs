@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -43,21 +43,34 @@ public class SaveDataUtility
 
         saveDataPath = Path.GetFullPath(Environment.ExpandEnvironmentVariables(saveDataPath));
 
-        string lastPathPart = Path.GetFileName(saveDataPath);
+        string? lastPathPart = Path.GetFileName(saveDataPath);
 
+        if (lastPathPart is null)
+        {
+            throw new InvalidOperationException($"Failed to determine directory name for '{saveDataPath}'.");
+        }
+
+        GameRootDirectoryName = lastPathPart;
         SaveDataPath = saveDataPath;
 
-        BackupsPath = Path.GetFullPath($"./backups/{lastPathPart}");
-        if (Directory.Exists(BackupsPath) == false)
-            Directory.CreateDirectory(BackupsPath);
-    }
+        BackupsPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "backups", GameRootDirectoryName));
 
+        if (Directory.Exists(BackupsPath) == false)
+        {
+            Directory.CreateDirectory(BackupsPath);
+        }
+    }
 
     /// <summary>
     /// Gets the full path where save data files are located.
     /// This is outside the application folder.
     /// </summary>
     public string SaveDataPath { get; private set; }
+
+    /// <summary>
+    /// Gets the game save data directory name.
+    /// </summary>
+    public string GameRootDirectoryName { get; private set; }
 
     /// <summary>
     /// Gets the fill path where save data backups are stored.
@@ -85,6 +98,7 @@ public class SaveDataUtility
             else if (archiveMode == ArchiveMode.SubFolders)
             {
                 IEnumerable<string> dirs = Directory.EnumerateDirectories(SaveDataPath, "*", SearchOption.TopDirectoryOnly);
+
                 foreach (string dir in dirs)
                 {
                     files = Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories);
@@ -122,8 +136,12 @@ public class SaveDataUtility
         foreach (ZipArchiveEntry entry in archive.Entries.Where(e => e.Length > 0))
         {
             string targetFilename = Path.Combine(SaveDataPath, entry.FullName);
-            string targetDirectory = Path.GetDirectoryName(targetFilename);
-            Directory.CreateDirectory(targetDirectory);
+            string? targetDirectory = Path.GetDirectoryName(targetFilename);
+
+            if (targetDirectory is not null)
+            {
+                Directory.CreateDirectory(targetDirectory);
+            }
 
             using Stream sourceStream = entry.Open();
             using var targetStream = new FileStream(targetFilename, FileMode.OpenOrCreate, FileAccess.Write);
@@ -139,11 +157,11 @@ public class SaveDataUtility
     public async Task BackupLocalSaveData()
     {
         if (Directory.Exists(SaveDataPath) == false)
+        {
             return;
+        }
 
-        string now = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-fff");
-
-        string filename = $"{now}.zip";
+        string filename = $"{DateTime.Now:yyyy-MM-dd_HH-mm-ss-fff}.zip";
 
         Stream archiveStream = await GetSaveDataArchive();
         using var targetStream = new FileStream(Path.Combine(BackupsPath, filename), FileMode.OpenOrCreate, FileAccess.Write);

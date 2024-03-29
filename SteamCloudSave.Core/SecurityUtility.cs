@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -17,8 +17,13 @@ public static class SecurityUtility
     /// </summary>
     /// <param name="unprotectedValue">The unprotected string value to protect.</param>
     /// <returns>Returns a base64 encoded protected string, or null on error.</returns>
-    public static string ProtectString(string unprotectedValue)
+    public static string? ProtectString(string? unprotectedValue)
     {
+        if (unprotectedValue is null)
+        {
+            return null;
+        }
+
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             try
@@ -41,8 +46,13 @@ public static class SecurityUtility
     /// </summary>
     /// <param name="unprotectedBinaryValue">The unprotected byte array value to protect.</param>
     /// <returns>Returns a base64 encoded protected string, or null on error.</returns>
-    public static string ProtectBuffer(byte[] unprotectedBinaryValue)
+    public static string? ProtectBuffer(byte[]? unprotectedBinaryValue)
     {
+        if (unprotectedBinaryValue is null)
+        {
+            return null;
+        }
+
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             try
@@ -64,8 +74,13 @@ public static class SecurityUtility
     /// </summary>
     /// <param name="protectedValue">The base64 encoded protected string to unprotect.</param>
     /// <returns>Returns unprotected string value, or null on error.</returns>
-    public static string UnprotectString(string protectedValue)
+    public static string? UnprotectString(string? protectedValue)
     {
+        if (protectedValue is null)
+        {
+            return null;
+        }
+
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             try
@@ -88,8 +103,13 @@ public static class SecurityUtility
     /// </summary>
     /// <param name="protectedValue">The base64 encoded protected byte array to unprotect.</param>
     /// <returns>Returns unprotected byte array value, or null on error.</returns>
-    public static byte[] UnprotectBuffer(string protectedValue)
+    public static byte[]? UnprotectBuffer(string? protectedValue)
     {
+        if (protectedValue is null)
+        {
+            return null;
+        }
+
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             try

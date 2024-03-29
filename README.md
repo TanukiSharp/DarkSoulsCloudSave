@@ -1,6 +1,7 @@
-# Download [<img src="https://img.shields.io/badge/download-1.0.7-blue.svg" target="_blank">](https://github.com/TanukiSharp/DarkSoulsCloudSave/raw/master/Builds/DarkSoulsCloudSave_1.0.7.zip)
+# Download [<img src="https://img.shields.io/badge/Windows-1.1.0-blue.svg" target="_blank">](https://github.com/TanukiSharp/DarkSoulsCloudSave/raw/master/Builds/win-x64/DarkSoulsCloudSave_1.1.0.zip) [<img src="https://img.shields.io/badge/Linux-1.1.0-blue.svg" target="_blank">](https://github.com/TanukiSharp/DarkSoulsCloudSave/raw/master/Builds/linux-x64/DarkSoulsCloudSave_1.1.0.zip)
 
-There is a `Builds` directory that contains binaries ready to be executed, for the ones not familiar with technical aspects.
+
+There is a `Builds` directory that contains binaries ready to be executed, for the ones not familiar with technical aspects. Still, read the Requirements section below.
 
 # Overview
 
@@ -10,7 +11,7 @@ It also allows you to easily restore save data from the cloud, and so by definit
 
 For now, Dropbox and Google Drive can be used as cloud storages, so you will need a Dropbox account and/or a Google account to use it. (creating those accounts is free)
 
-This software has been written with extensibility in mind, so in the future it **could** be possible to add other cloud storage services. *(now experimenting Microsoft OneDrive cloud storage)*
+This software has been written with extensibility in mind, so in the future it **could** be possible to add other cloud storage services.
 
 ![DarkSoulsCloudSave Application](Images/readme/main_window.png "DarkSoulsCloudSave Application")
 
@@ -28,12 +29,20 @@ This software requires:
 * .NET 8+
 * A Dropbox and/or a Google account
 
-.NET Frameworks 4.7.2 is preinstalled on Windows 10 Fall Creators Update and higher. It can be installed separately on Windows 7 and higher.
-
-Windows XP and Vista are not supported.
-
 Put the application on your disk where it has read and write access.
 For example, avoid using `Program Files` folder.
+
+# How to get it running
+
+This application is not provided with an installer, so you need to download the zip file, extract it, and run the file `SteamCloudSave.exe` on Windows and `SteamCloudSave` on Linux.
+
+Note that you will need to have installed .NET 8 or higher on your machine.
+
+When the application runs, some files are created. If you download another version of the application, you will have three options:
+
+- Copy configuration files from previous version's folder to current version's folder
+- Overwrite previous version's file with new version's file (beware to delete all previous files before)
+- To not reuse previous configuration and re-configure the new version
 
 # Authorization with Dropbox
 
@@ -149,42 +158,43 @@ The application remembers the `Auto-store` and `Auto-restore` states. This is sa
 
 # How to build from source code
 
-This application has been written in C# using WPF. (Windows Presentation Foundation)
+This application has been written in C# using Avalonia (originally using WPF).
 
-To build it yourself, you will need Visual Studio 2015 Community Edition or higher. (available for free)
+To build it yourself, simply open a terminal in the directory containing the `.sln` file, and type:
 
-Open the `DarkSoulsCloudSave.sln` file with Visual Studio, then build the application. (menu Build / Build Solution)
+```sh
+dotnet build
+```
 
-![Build from source](Images/readme/build.png "Build from source")
+You can also open the root directory in Visual Studio Code, Visual Studio 2022 Community Edition, or Rider.
 
 Cloud storage extension libraries have some dependencies, setup as `NuGet` packages.
-When you will build, dependencies should be automatically resolved by Visual Studio.
+When you will build, dependencies should be automatically resolved.
 
-The way builds are made is, compile in `Release` configuration, then run the script `DarkSoulsCloudSave\bin\MakeBuildFromRelease.bat`.
+To make a release, just run:
 
-This creates a `Build\DarkSoulsCloudSave` folder and copies only the necessary files from the `Release` folder. Be careful since this totally erase a previously existing `Build` folder and its content, if any.
+```sh
+dotnet publish -c Release -r win-64 # For Windows.
+# or
+dotnet publish -c Release -r linux-x64 # For Linux.
+```
+
+The `-c Release` option is used to build in release mode. Feel free to use `-c Debug` for debug mode.
+
+This will create a `Builds/<platform>/DarkSoulsCloudSave_<version>.zip` file. Be careful since this totally deletes a previously existing file with the same name, if any.
 
 # For developers
 
-The `DarksSoulsCloudSave.Core` library contains most of the application logic, so if you want to create your own application or service, feel free to use this library as a working base.
+The `SteamCloudSave.Core` library contains most of the application logic, so if you want to create your own application or service, feel free to use this library as a working base.
 
-The Dropbox cloud storage implementation is in the `DarkSoulsCloudSave.DropboxExtension` library.
+The Dropbox cloud storage implementation is in the `SteamCloudSave.DropboxExtension` library.
 
-An experimental `DarkSoulsCloudSave.GoogleDriveExtension` is also available and operational, but please read the `Experiments` section bellow before using it.
+A Google Drive implementation is also available in the `SteamCloudSave.GoogleDriveExtension` library.
 
 # License
 
 This software is provided as WTFPL.
 http://www.wtfpl.net/
-
-# Experiments
-
-I'm now experimenting a Google Drive based cloud storage implementation, but there are a few issues for the moment.
-
-Despite technical difficulties, there are some limitations in the product that makes me feel uncomfortable for the moment, as stated on the following page, section `What is the Application Data folder?`.
-https://developers.google.com/drive/v3/web/appdata
-
-This document is intended to developers, so as an end-user, when you read it, replace `your application` by `DarkSoulsCloudSave` and `the user` by `you`.
 
 # Request from the authors
 

@@ -1,6 +1,8 @@
 .vs/
 .vscode/
 
+SteamCloudSave/bin/
+SteamCloudSave/obj/
 SteamCloudSave.Core/bin/
 SteamCloudSave.Core/obj/
 SteamCloudSave.Windows/bin/Build/

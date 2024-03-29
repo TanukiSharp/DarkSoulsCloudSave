@@ -1,0 +1,184 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="using:SteamCloudSave.ViewModels">
+
+	<DataTemplate x:Key="CloudStorageView">
+		<StackPanel Orientation="Vertical" Margin="0 0 0 16" ToolTip.Tip="{Binding DetailedStatus, Mode=OneWay}">
+			<TextBlock Text="{Binding Name, Mode=OneTime}" FontWeight="Bold" Margin="2" VerticalAlignment="Center"/>
+			<TextBlock Text="{Binding Status, Mode=OneWay}" Width="150" FontStyle="Italic" Margin="2" VerticalAlignment="Center" ToolTip.Tip="{Binding Status, Mode=OneWay}"/>
+			<CheckBox IsChecked="{Binding IsStoreTarget}" Content="Store target" Margin="2" IsThreeState="False"/>
+			<RadioButton GroupName="A" IsChecked="{Binding IsRestoreSource}" Content="Restore source" Margin="2" IsThreeState="False"/>
+		</StackPanel>
+	</DataTemplate>
+
+	<DataTemplate x:Key="RootView">
+
+		<DockPanel LastChildFill="True">
+
+			<TextBlock FontSize="14" DockPanel.Dock="Bottom" Margin="0" Text="{Binding Status, Mode=OneWay}" Background="#0C000000" Padding="2"/>
+
+			<Expander DockPanel.Dock="Right" Padding="4" Margin="0" Background="#0C000000" MinWidth="0" ExpandDirection="Left" VerticalAlignment="Stretch">
+				<Expander.Header>
+					<LayoutTransformControl>
+						<LayoutTransformControl.LayoutTransform>
+							<RotateTransform Angle="90"/>
+						</LayoutTransformControl.LayoutTransform>
+						<TextBlock Text="Cloud Storages"/>
+					</LayoutTransformControl>
+				</Expander.Header>
+
+				<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+					<ItemsControl ItemsSource="{Binding CloudStorageViewModels, Mode=OneTime}" ItemTemplate="{StaticResource CloudStorageView}"/>
+				</ScrollViewer>
+
+				<Expander.Template>
+					<ControlTemplate>
+						<DockPanel MinWidth="{TemplateBinding MinWidth}"
+								   MaxWidth="{TemplateBinding MaxWidth}"
+								   HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+								   VerticalAlignment="{TemplateBinding VerticalAlignment}">
+							<ToggleButton x:Name="ExpanderHeader"
+										  DockPanel.Dock="Top"
+										  MinHeight="{TemplateBinding MinHeight}"
+										  CornerRadius="{TemplateBinding CornerRadius}"
+										  IsEnabled="{TemplateBinding IsEnabled}"
+										  Content="{TemplateBinding Header}"
+										  ContentTemplate="{TemplateBinding HeaderTemplate}"
+										  IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}">
+								<ToggleButton.Template>
+									<ControlTemplate>
+										<Border x:Name="ToggleButtonBackground"
+														CornerRadius="{TemplateBinding CornerRadius}"
+														Background="{TemplateBinding Background}"
+														BorderBrush="{TemplateBinding BorderBrush}"
+														BorderThickness="{TemplateBinding BorderThickness}">
+											<Grid x:Name="ToggleButtonGrid" RowDefinitions="Auto,Auto">
+												<ContentPresenter x:Name="PART_ContentPresenter"
+																  HorizontalAlignment="Center"
+																  Content="{TemplateBinding Content}"
+																  ContentTemplate="{TemplateBinding ContentTemplate}"
+																  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+																  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+																  Foreground="{TemplateBinding Foreground}"
+																  Margin="0 8 0 0"
+																  Grid.Row="1" />
+												<Border x:Name="ExpandCollapseChevronBorder"
+														Grid.Row="0"
+														HorizontalAlignment="Center"
+														Width="{DynamicResource ExpanderChevronButtonSize}"
+														Height="{DynamicResource ExpanderChevronButtonSize}"
+														CornerRadius="{DynamicResource ControlCornerRadius}"
+														BorderBrush="{DynamicResource ExpanderChevronBorderBrush}"
+														BorderThickness="{DynamicResource ExpanderChevronBorderThickness}"
+														Background="{DynamicResource ExpanderChevronBackground}">
+													<Path x:Name="ExpandCollapseChevron"
+														  HorizontalAlignment="Center"
+														  VerticalAlignment="Center"
+														  RenderTransformOrigin="50%,50%"
+														  Stretch="None"
+														  Stroke="{DynamicResource ExpanderChevronForeground}"
+														  StrokeThickness="1">
+														<Path.RenderTransform>
+															<RotateTransform />
+														</Path.RenderTransform>
+													</Path>
+												</Border>
+											</Grid>
+										</Border>
+									</ControlTemplate>
+								</ToggleButton.Template>
+							</ToggleButton>
+							<Border x:Name="ExpanderContent"
+									IsVisible="{TemplateBinding IsExpanded, Mode=TwoWay}"
+									Background="{TemplateBinding Background}"
+									BorderBrush="{TemplateBinding BorderBrush}"
+									BorderThickness="{TemplateBinding BorderThickness}"
+									MinHeight="{TemplateBinding MinHeight}"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Stretch"
+									Padding="{TemplateBinding Padding}">
+								<ContentPresenter x:Name="PART_ContentPresenter"
+												  Content="{TemplateBinding Content}"
+												  ContentTemplate="{TemplateBinding ContentTemplate}"
+												  Foreground="{TemplateBinding Foreground}"
+												  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+												  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+							</Border>
+						</DockPanel>
+					</ControlTemplate>
+				</Expander.Template>
+			</Expander>
+
+			<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Right" Margin="2">
+				<TextBlock FontSize="14" Text="TanukiSharp" Margin="2 2 10 2"/>
+				<TextBlock FontSize="14" Text="{Binding Version, StringFormat=version {0}, Mode=OneTime}" Margin="2 2 4 2">
+					<TextBlock.ContextMenu>
+						<ContextMenu>
+							<MenuItem Header="Copy to clipboard" Command="{Binding CopyVersionCommand, Mode=OneTime}"/>
+						</ContextMenu>
+					</TextBlock.ContextMenu>
+				</TextBlock>
+			</StackPanel>
+
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<CheckBox Grid.Column="0" Grid.Row="0" IsChecked="{Binding IsAutoRestore}" IsThreeState="False" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8" Content="Auto-restore" ToolTip.Tip="Automatically download save data from Cloud before the game starts when clicking the 'Run Game' button"/>
+				<CheckBox Grid.Column="0" Grid.Row="2" IsChecked="{Binding IsAutoStore}" IsThreeState="False" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8" Content="Auto-store" ToolTip.Tip="Automatically upload save data to Cloud after the game shuts down when have clicked the 'Run Game' button"/>
+
+				<Button x:Name="btnRestore" Classes.isRestoreLocked="{Binding IsRestoreLocked}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="0" Margin="8 8 8 4" Command="{Binding RestoreCommand, Mode=OneTime}">
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+						<Image Source="/Assets/Download.png" Width="48" Height="48" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+						<TextBlock Text="Restore" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12 0 12 0" FontSize="40"/>
+					</StackPanel>
+					<Button.Styles>
+						<Style Selector="Button.isRestoreLocked">
+							<Setter Property="IsEnabled" Value="False"/>
+							<Setter Property="Opacity" Value="0.5"/>
+						</Style>
+					</Button.Styles>
+				</Button>
+
+				<Button x:Name="btnRunGame" Classes.isRunGameLocked="{Binding IsRunGameLocked}" Classes.isGameStarting="{Binding IsGameStarting}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="1" Grid.Row="1" Margin="8 4 8 4" Command="{Binding StartGameCommand, Mode=OneTime}">
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+						<Image Source="/Assets/Game.png" Width="48" Height="48" />
+						<TextBlock Text="Run Game" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12 0 12 0" FontSize="40"/>
+					</StackPanel>
+					<Button.Styles>
+						<Style Selector="Button.isRunGameLocked">
+							<Setter Property="IsEnabled" Value="False"/>
+							<Setter Property="Opacity" Value="0.5"/>
+						</Style>
+						<Style Selector="Button.isGameStarting">
+							<Setter Property="IsEnabled" Value="False"/>
+							<Setter Property="Opacity" Value="0.5"/>
+						</Style>
+					</Button.Styles>
+				</Button>
+
+				<Button x:Name="btnStore" Classes.isStoreLocked="{Binding IsStoreLocked}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="1" Grid.Row="2" Margin="8 4 8 8" Command="{Binding StoreCommand, Mode=OneTime}">
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+						<Image Source="/Assets/Upload.png" Width="48" Height="48" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+						<TextBlock Text="Store" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12 0 12 0" FontSize="40"/>
+					</StackPanel>
+					<Button.Styles>
+						<Style Selector="Button.isStoreLocked">
+							<Setter Property="IsEnabled" Value="False"/>
+							<Setter Property="Opacity" Value="0.5"/>
+						</Style>
+					</Button.Styles>
+				</Button>
+			</Grid>
+		</DockPanel>
+
+	</DataTemplate>
+
+</ResourceDictionary>

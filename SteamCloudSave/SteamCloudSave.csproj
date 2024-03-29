@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<Copyright>Copyright © TanukiSharp 2016 - 2024</Copyright>
+		<AssemblyVersion>1.1.0</AssemblyVersion>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
+		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
+		<Nullable>enable</Nullable>
+		<WarningLevel>9999</WarningLevel>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+		<PublishDir>$(MSBuildThisFileDirectory)\..\Builds\$(RuntimeIdentifier)\DarkSoulsCloudSave_$(AssemblyVersion)</PublishDir>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<AvaloniaResource Include="Assets\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="11.0.10" />
+		<PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.10" />
+		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10" />
+		<PackageReference Include="MessageBox.Avalonia" Version="3.1.5.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\SteamCloudSave.Core\SteamCloudSave.Core.csproj" />
+		<ProjectReference Include="..\SteamCloudSave.DropboxExtension\SteamCloudSave.DropboxExtension.csproj" />
+		<ProjectReference Include="..\SteamCloudSave.GoogleDriveExtension\SteamCloudSave.GoogleDriveExtension.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Resource Include="Assets\Download.png" />
+		<Resource Include="Assets\Game.png" />
+		<Resource Include="Assets\Upload.png" />
+	</ItemGroup>
+
+	<UsingTask TaskName="ZipDir" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+		<ParameterGroup>
+			<SourceDirectory ParameterType="System.String" Required="true" />
+			<DestinationFile ParameterType="System.String" Required="true" />
+		</ParameterGroup>
+		<Task>
+			<Using Namespace="System.IO.Compression" />
+			<Code Type="Fragment" Language="cs">
+				<![CDATA[
+				if (File.Exists(DestinationFile))
+				{
+					File.Delete(DestinationFile);
+				}
+				ZipFile.CreateFromDirectory(SourceDirectory, DestinationFile, CompressionLevel.Optimal, true);
+				Directory.Delete(SourceDirectory, true);
+				]]>
+			</Code>
+		</Task>
+	</UsingTask>
+
+	<Target Name="PackApplication" AfterTargets="Publish">
+		<ZipDir SourceDirectory="$(PublishDir)" DestinationFile="$(PublishDir.TrimEnd('\').TrimEnd('/')).zip"/>
+	</Target>
+</Project>

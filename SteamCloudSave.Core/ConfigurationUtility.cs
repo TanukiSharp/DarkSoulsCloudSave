@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -14,10 +14,12 @@ public static class ConfigurationUtility
 {
     static ConfigurationUtility()
     {
-        ExtensionsConfigurationPath = Path.GetFullPath("./storageconfig");
+        ExtensionsConfigurationPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "storageconfig"));
 
         if (Directory.Exists(ExtensionsConfigurationPath) == false)
+        {
             Directory.CreateDirectory(ExtensionsConfigurationPath);
+        }
     }
 
     /// <summary>
@@ -25,17 +27,19 @@ public static class ConfigurationUtility
     /// </summary>
     public static string ExtensionsConfigurationPath { get; private set; }
 
-    private static readonly IReadOnlyDictionary<string, string> EmptyDictionary = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>());
+    private static readonly IReadOnlyDictionary<string, string?> EmptyDictionary = new ReadOnlyDictionary<string, string?>(new Dictionary<string, string?>());
 
     /// <summary>
     /// Gets the full filename of a configuration file for the given extension.
     /// </summary>
     /// <param name="extensionType">The class that implements the extension.</param>
     /// <returns>Returns the full filename of a configuration file for the given extension, or null if <paramref name="extensionType"/> is null.</returns>
-    public static string GetExtensionConfigurationFilePath(Type extensionType)
+    public static string? GetExtensionConfigurationFilePath(Type extensionType)
     {
         if (extensionType is null)
+        {
             return null;
+        }
 
         return Path.GetFullPath(Path.Combine(ExtensionsConfigurationPath, $"{extensionType.Name}.config"));
     }
@@ -46,16 +50,24 @@ public static class ConfigurationUtility
     /// </summary>
     /// <param name="extensionType">The class that implements the extension.</param>
     /// <param name="configuration">The key value pairs to store in the configuration file.</param>
-    public static void CreateConfigurationFile(Type extensionType, IDictionary<string, string> configuration)
+    public static void CreateConfigurationFile(Type extensionType, IDictionary<string, string?> configuration)
     {
         if (extensionType is null || configuration is null || configuration.Count == 0)
+        {
             return;
+        }
 
-        var filePath = GetExtensionConfigurationFilePath(extensionType);
+        string? filePath = GetExtensionConfigurationFilePath(extensionType);
+
+        if (filePath is null)
+        {
+            throw new InvalidOperationException($"Unknown extension type '{extensionType.FullName}'.");
+        }
 
         var content = configuration
+            .Where(kv => kv.Value is not null)
             .Select(kv => $"{kv.Key}={kv.Value}")
-            .Aggregate((a, b) => string.Concat(a, Environment.NewLine, b));
+            .Aggregate((a, b) => string.Concat(a, '\n', b));
 
         File.WriteAllText(filePath, content, Encoding.UTF8);
     }
@@ -71,12 +83,19 @@ public static class ConfigurationUtility
     /// <param name="extensionType">The class that implements the extension.</param>
     /// <returns>Returns a dictionary containing the key/value pairs contained in the configuration file.
     /// If <paramref name="extensionType"/> is null, an empty dictionary is returned.</returns>
-    public static IReadOnlyDictionary<string, string> ReadConfigurationFile(Type extensionType)
+    public static IReadOnlyDictionary<string, string?> ReadConfigurationFile(Type extensionType)
     {
         if (extensionType is null)
+        {
             return EmptyDictionary;
+        }
 
-        var filePath = GetExtensionConfigurationFilePath(extensionType);
+        string? filePath = GetExtensionConfigurationFilePath(extensionType);
+
+        if (filePath is null)
+        {
+            throw new InvalidOperationException($"Unknown extension type '{extensionType.FullName}'.");
+        }
 
         if (File.Exists(filePath) == false)
         {
@@ -84,26 +103,34 @@ public static class ConfigurationUtility
             return EmptyDictionary;
         }
 
-        var dictionary = new Dictionary<string, string>();
+        var dictionary = new Dictionary<string, string?>();
 
         foreach (string line in File.ReadAllLines(filePath).Select(x => x.TrimStart()))
         {
             if (line.StartsWith(SharpCharacter) || line.StartsWith(SemiColonCharacter) || line.StartsWith(DoubleSlashString))
+            {
                 continue;
+            }
 
             string[] keyValue = line.Split(['='], 2);
 
             string key = keyValue[0].TrimEnd();
 
             if (key.Length == 0)
+            {
                 continue;
+            }
 
             if (keyValue.Length == 1)
+            {
                 dictionary.Add(key, null);
+            }
             else
+            {
                 dictionary.Add(key, keyValue[1]);
+            }
         }
 
-        return new ReadOnlyDictionary<string, string>(dictionary);
+        return new ReadOnlyDictionary<string, string?>(dictionary);
     }
 }
