@@ -91,8 +91,6 @@ The `access token` is what proves to Dropbox that the application has been grant
 
 It is stored encrypted in the file `storageconfig/DropboxCloudStorage.config` on Windows only, other platforms store the access token in clear.
 
-![Storage Configuration](Images/readme/file_storageconfig.png "Storage Configuration")
-
 It can only be decrypted on the machine and by the logged-in user that generated it, so the `access token` will simply be considered corrupted on another machine or on the same machine but if you are logged-in with another user.
 Please **make sure to understand** that it means somebody with a physical access to your machine while you are logged-in, could decrypt the `access token`.
 
@@ -135,8 +133,6 @@ Save data on local machine are backed up each time you restore from the cloud, t
 
 The backups are contained in the `backups` folder, in the form `<filename>_<date>_<time>.zip`, where `<date>` is `<year>-<month>-<day>` and `<time>` is `<hour_24H>-<minutes>-<seconds>-<milliseconds>`
 
-![Backups](Images/readme/file_backups.png "Backups")
-
 Backups can accumulate quickly, so remember to clean it up from time to time.
 
 It is recommended to always keep at least the three last backups even if everything seems to be alright, just in case.
@@ -153,8 +149,6 @@ You may need this for whatever reason, but be *sure to know what you do* if you 
 ## Configuration
 
 The application remembers the `Auto-store` and `Auto-restore` states. This is saved in the `DarkSoulsCloudSave.config` file.
-
-![Configuration](Images/readme/file_config.png "Configuration")
 
 # How to build from source code
 
