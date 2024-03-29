@@ -63,6 +63,6 @@
 	</UsingTask>
 
 	<Target Name="PackApplication" AfterTargets="Publish">
-		<ZipDir SourceDirectory="$(PublishDir)" DestinationFile="$(PublishDir.TrimEnd('\')).zip"/>
+		<ZipDir SourceDirectory="$(PublishDir)" DestinationFile="$(PublishDir.TrimEnd('\').TrimEnd('/')).zip"/>
 	</Target>
 </Project>
