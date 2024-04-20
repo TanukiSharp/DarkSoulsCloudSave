@@ -1,7 +1,5 @@
 using System;
-using Google.Apis.Drive.v3.Data;
 using SteamCloudSave.Core;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SteamCloudSave;
 
