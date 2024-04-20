@@ -1,7 +1,7 @@
 # Download [<img src="https://img.shields.io/badge/Windows-1.1.0-blue.svg" target="_blank">](https://github.com/TanukiSharp/DarkSoulsCloudSave/raw/master/Builds/win-x64/DarkSoulsCloudSave_1.1.0.zip) [<img src="https://img.shields.io/badge/Linux-1.1.0-blue.svg" target="_blank">](https://github.com/TanukiSharp/DarkSoulsCloudSave/raw/master/Builds/linux-x64/DarkSoulsCloudSave_1.1.0.zip)
 
 
-There is a `Builds` directory that contains binaries ready to be executed, for the ones not familiar with technical aspects. Still, read the Requirements section below.
+There is a `Builds` directory that contains binaries ready to be executed, for the ones not familiar with technical aspects. Still, read the `Requirements` section below.
 
 # Overview
 
@@ -168,10 +168,12 @@ When you will build, dependencies should be automatically resolved.
 To make a release, just run:
 
 ```sh
-dotnet publish -c Release -r win-64 # For Windows.
+dotnet publish -c Release -r win-x64 # For Windows.
 # or
 dotnet publish -c Release -r linux-x64 # For Linux.
 ```
+
+You can run both commands on Windows and Linux, you do not need a Windows machine to build and Windows nor a Linux machine to build on Linux.
 
 The `-c Release` option is used to build in release mode. Feel free to use `-c Debug` for debug mode.
 
