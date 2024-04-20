@@ -3,7 +3,7 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0</TargetFramework>
 		<Copyright>Copyright © TanukiSharp 2016 - 2024</Copyright>
-		<AssemblyVersion>1.1.0</AssemblyVersion>
+		<AssemblyVersion>1.1.1</AssemblyVersion>
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 		<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
 		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>

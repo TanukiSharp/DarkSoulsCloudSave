@@ -1,4 +1,4 @@
-# Download [<img src="https://img.shields.io/badge/Windows-1.1.0-blue.svg" target="_blank">](https://github.com/TanukiSharp/DarkSoulsCloudSave/raw/master/Builds/win-x64/DarkSoulsCloudSave_1.1.0.zip) [<img src="https://img.shields.io/badge/Linux-1.1.0-blue.svg" target="_blank">](https://github.com/TanukiSharp/DarkSoulsCloudSave/raw/master/Builds/linux-x64/DarkSoulsCloudSave_1.1.0.zip)
+# Download [<img src="https://img.shields.io/badge/Windows-1.1.1-blue.svg" target="_blank">](https://github.com/TanukiSharp/DarkSoulsCloudSave/raw/master/Builds/win-x64/DarkSoulsCloudSave_1.1.1.zip) [<img src="https://img.shields.io/badge/Linux-1.1.1-blue.svg" target="_blank">](https://github.com/TanukiSharp/DarkSoulsCloudSave/raw/master/Builds/linux-x64/DarkSoulsCloudSave_1.1.1.zip)
 
 
 There is a `Builds` directory that contains binaries ready to be executed, for the ones not familiar with technical aspects. Still, read the `Requirements` section below.
