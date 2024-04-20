@@ -1,5 +1,7 @@
 using System;
+using Google.Apis.Drive.v3.Data;
 using SteamCloudSave.Core;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SteamCloudSave;
 
@@ -9,7 +11,11 @@ public static class Constants
     public const string GameSteamUrl = "steam://rungameid/374320";
     public const string ProcessName = "DarkSoulsIII";
     public static readonly string[] WindowsSaveDataPath = ["%APPDATA%/DarkSoulsIII"];
-    public static readonly string[] LinuxSaveDataPath = ["%HOME%/.steam/steam/steamapps/compatdata/374320/pfx/drive_c/users/steamuser/Application Data/DarkSoulsIII"];
+    public static readonly string[] LinuxSaveDataPath =
+    [
+        "%HOME%/.steam/steam/steamapps/compatdata/374320/pfx/drive_c/users/steamuser/Application Data/DarkSoulsIII",
+        "%HOME%/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/compatdata/374320/pfx/drive_c/users/steamuser/Application Data/DarkSoulsIII"
+    ];
     public const ArchiveMode GameArchiveMode = ArchiveMode.SubFolders;
 }
 
