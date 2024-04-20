@@ -33,32 +33,44 @@ public class SaveDataUtility
     /// <summary>
     /// Initializes the <see cref="SaveDataUtility"/> instance.
     /// </summary>
-    /// <param name="saveDataPath">Full path where save data is located.</param>
+    /// <param name="saveDataPaths">Full paths where save data is located.</param>
     /// <param name="archiveMode">Tells what is archived.</param>
-    public SaveDataUtility(string saveDataPath, ArchiveMode archiveMode)
+    public SaveDataUtility(string[] saveDataPaths, ArchiveMode archiveMode)
     {
-        ArgumentNullException.ThrowIfNull(saveDataPath);
+        ArgumentNullException.ThrowIfNull(saveDataPaths);
 
         this.archiveMode = archiveMode;
 
-        saveDataPath = Path.GetFullPath(Environment.ExpandEnvironmentVariables(saveDataPath));
-
-        string? lastPathPart = Path.GetFileName(saveDataPath);
-
-        if (lastPathPart is null)
+        foreach (string saveDataPath in saveDataPaths)
         {
-            throw new InvalidOperationException($"Failed to determine directory name for '{saveDataPath}'.");
+            string localSaveDataPath = Path.GetFullPath(Environment.ExpandEnvironmentVariables(saveDataPath));
+
+            if (Directory.Exists(localSaveDataPath) == false)
+            {
+                continue;
+            }
+
+            string? lastPathPart = Path.GetFileName(localSaveDataPath);
+
+            if (lastPathPart is null)
+            {
+                continue;
+            }
+
+            GameRootDirectoryName = lastPathPart;
+            SaveDataPath = localSaveDataPath;
+
+            BackupsPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "backups", GameRootDirectoryName));
+
+            if (Directory.Exists(BackupsPath) == false)
+            {
+                Directory.CreateDirectory(BackupsPath);
+            }
+
+            return;
         }
 
-        GameRootDirectoryName = lastPathPart;
-        SaveDataPath = saveDataPath;
-
-        BackupsPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "backups", GameRootDirectoryName));
-
-        if (Directory.Exists(BackupsPath) == false)
-        {
-            Directory.CreateDirectory(BackupsPath);
-        }
+        throw new InvalidOperationException($"Failed to determine save directory with ['{string.Join("', '", saveDataPaths)}'].");
     }
 
     /// <summary>

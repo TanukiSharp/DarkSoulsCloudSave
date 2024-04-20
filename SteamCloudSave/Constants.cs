@@ -8,8 +8,8 @@ public static class Constants
     public const string GameDisplayName = "Dark Souls 3";
     public const string GameSteamUrl = "steam://rungameid/374320";
     public const string ProcessName = "DarkSoulsIII";
-    public const string WindowsSaveDataPath = "%APPDATA%/DarkSoulsIII";
-    public const string LinuxSaveDataPath = "%HOME%/.steam/steam/steamapps/compatdata/374320/pfx/drive_c/users/steamuser/Application Data/DarkSoulsIII";
+    public static readonly string[] WindowsSaveDataPath = ["%APPDATA%/DarkSoulsIII"];
+    public static readonly string[] LinuxSaveDataPath = ["%HOME%/.steam/steam/steamapps/compatdata/374320/pfx/drive_c/users/steamuser/Application Data/DarkSoulsIII"];
     public const ArchiveMode GameArchiveMode = ArchiveMode.SubFolders;
 }
 

@@ -143,7 +143,7 @@ public class RootViewModel : ViewModelBase
 
         configuration = LoadConfiguration();
 
-        SaveDataUtility = new SaveDataUtility(GetSaveDataPath(), Constants.GameArchiveMode);
+        SaveDataUtility = new SaveDataUtility(GetSaveDataPaths(), Constants.GameArchiveMode);
 
         ConfigureStorageViewModels(configuration);
 
@@ -157,7 +157,7 @@ public class RootViewModel : ViewModelBase
         CloudStorageSelectionChanged();
     }
 
-    private static string GetSaveDataPath()
+    private static string[] GetSaveDataPaths()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
